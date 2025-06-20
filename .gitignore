@@ -1,0 +1,21 @@
+# Entorno virtual (creado por venv)
+.venv/
+
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+
+# Base de datos local
+db.sqlite3
+
+# Configuración del entorno de desarrollo (VSCode, logs, etc.)
+.vscode/
+*.log
+
+# Archivos subidos por usuarios (media del proyecto)
+media/
+
+# Archivos personales (no subir al repositorio)
+consigna.txt
+plan.txt
+

@@ -1,0 +1,13 @@
+.navbar-custom {
+  background-color: #1e1e6d; /* Azul oscuro profundo */
+}
+
+.navbar-custom .nav-link {
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+.navbar-custom .nav-link:hover {
+  color: #00f2ff; /* Celeste vibrante */
+  text-shadow: 0 0 2px #00f2ff;
+}

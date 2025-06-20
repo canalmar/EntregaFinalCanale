@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container my-4" style="max-width:800px;">
+  <h2 class="fw-bold mb-2">{{ post.title }}</h2>
+  <p class="text-muted mb-3">
+    {{ post.author }} · {{ post.category }} · {{ post.created|date:"M d, Y" }}
+  </p>
+  {% if post.image %}
+    <img src="{{ post.image.url }}" class="img-fluid mb-4" alt="{{ post.title }}">
+  {% endif %}
+  <p>{{ post.content|linebreaks }}</p>
+</div>
+{% endblock %}

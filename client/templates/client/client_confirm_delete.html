@@ -1,0 +1,23 @@
+{% extends "core\base.html" %}
+
+{% block title %}Eliminar Cliente{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width:600px;">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-3 text-center">Eliminar Cliente</h4>
+      <p class="text-center">
+        ¿Estás seguro de que deseas eliminar
+        <strong>{{ client.first_name }} {{ client.last_name }}</strong>?
+      </p>
+
+      <form method="post" class="d-flex justify-content-between">
+        {% csrf_token %}
+        <a href="{% url 'client:client_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-dark">Eliminar</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Listado de Productos{% endblock %}
+
+{% block content %}
+<div class="container mt-3">
+  <h2 class="mb-4">Gestión de Productos</h2>
+
+  <!-- Buscador -->
+  <form method="get" class="d-flex justify-content-center mb-4">
+    <input
+      type="text"
+      name="search"
+      class="form-control w-50 me-2"
+      placeholder="Buscar por título, autor o categoría…"
+      value="{{ search|default:'' }}"
+    >
+    <button class="btn btn-outline-primary" type="submit">Buscar</button>
+  </form>
+
+  {% if products %}
+    <table class="table table-hover table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Título</th>
+          <th>Autor</th>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th class="text-center">Stock</th>
+          <th class="text-center">Imagen</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+          <tr>
+            <td>{{ product.title }}</td>
+            <td>{{ product.author }}</td>
+            <td>{{ product.category }}</td>
+            <td>${{ product.price }}</td>
+            <td class="text-center">{{ product.stock }}</td>
+            <td class="text-center">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.title }}" width="60">
+              {% else %}
+                <span class="text-muted">Sin imagen</span>
+              {% endif %}
+            </td>
+            <td class="text-center">
+              <div class="btn-group" role="group">
+                <a href="{% url 'product:product_edit' product.id %}"
+                   class="btn btn-sm btn-outline-primary">Editar</a>
+                <a href="{% url 'product:product_delete' product.id %}"
+                   class="btn btn-sm btn-outline-dark">Eliminar</a>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-center">No hay productos cargados.</p>
+  {% endif %}
+
+  <a href="{% url 'product:product_create' %}" class="btn btn-dark mt-3">
+    ➕ Crear nuevo producto
+  </a>
+</div>
+{% endblock %}

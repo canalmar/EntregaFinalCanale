@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Inicio - Tienda de Historias{% endblock %}
+
+{% block content %}
+<div class="row g-0 align-items-center bg-light rounded-4 shadow mx-3 my-3">
+  <div class="col-md-6 p-5">
+    <h1 class="display-5 fw-bold">Descubrí tu próxima <span class="text-primary">gran lectura</span></h1>
+    <p class="lead mt-3">
+      Sumate a nuestra comunidad lectora. Explorá nuestro catálogo, descubrí libros recomendados y conocé más a través del blog.
+    </p>
+    <div class="d-flex flex-wrap gap-3 mt-4">
+      <a href="{% url 'product:product_catalog' %}" class="btn btn-dark btn-custom">Explorar Catálogo</a>
+      <a href="{% url 'blog:post_list' %}" class="btn btn-outline-dark btn-custom">Ir al Blog</a>
+    </div>
+  </div>
+  <div class="col-md-6 d-none d-md-block">
+    <img src="{% static 'tienda/img/Home_imagen.avif' %}" alt="Librería iluminada" class="img-fluid rounded-4" style="object-fit: cover; height: 100%; max-height: 500px;">
+  </div>
+</div>
+
+<!-- Bloque adicional  ESTATICO-->
+<!-- Libros Destacados -->
+<div class="container mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="fw-bold">Libros Destacados</h2>
+    <a href="{% url 'product:product_catalog' %}" class="btn btn-outline-secondary btn-sm">Ver todos</a>
+  </div>
+  <div class="row g-4">
+    
+    <!-- Libro 1 -->
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-0">
+        <span class="position-absolute top-0 start-0 badge rounded-pill bg-dark m-2">Clásicos</span>
+        <img src="{% static 'tienda/img/principito.jpg' %}" class="card-img-top rounded-top" alt="El Principito" style="height: 180px; object-fit: contain;">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">El Principito</h5>
+          <p class="card-text text-muted mb-1">por Antoine de Saint-Exupéry</p>
+          <p class="mb-1 text-warning">★★★★☆ <span class="text-muted small">4.8 (234 reseñas)</span></p>
+          <p class="fw-bold text-primary fs-5 mb-0">$15990</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Libro 2 -->
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-0">
+        <span class="position-absolute top-0 start-0 badge rounded-pill bg-dark m-2">Literatura</span>
+        <img src="{% static 'tienda/img/cien_años_sol.jpg' %}" class="card-img-top rounded-top" alt="Cien Años de Soledad" style="height: 180px; object-fit: contain;">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">Cien Años de Soledad</h5>
+          <p class="card-text text-muted mb-1">por Gabriel García Márquez</p>
+          <p class="mb-1 text-warning">★★★★☆ <span class="text-muted small">4.9 (189 reseñas)</span></p>
+          <p class="fw-bold text-primary fs-5 mb-0">$18500</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Libro 3 -->
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm border-0">
+        <span class="position-absolute top-0 start-0 badge rounded-pill bg-dark m-2">Fantasía</span>
+        <img src="{% static 'tienda/img/harry_potter.jpg' %}" class="card-img-top rounded-top" alt="Harry Potter" style="height: 180px; object-fit: contain;">
+        <div class="card-body">
+          <h5 class="card-title fw-semibold">Harry Potter y la Piedra Filosofal</h5>
+          <p class="card-text text-muted mb-1">por J.K. Rowling</p>
+          <p class="mb-1 text-warning">★★★★☆ <span class="text-muted small">4.7 (456 reseñas)</span></p>
+          <p class="fw-bold text-primary fs-5 mb-0">$22990</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

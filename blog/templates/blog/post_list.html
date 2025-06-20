@@ -1,0 +1,77 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Blog | Publicaciones{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <h2 class="mb-4 text-center fw-bold">Blog: Publicaciones</h2>
+
+  <!-- Buscador -->
+  <form method="get" class="d-flex justify-content-center mb-4">
+    <input
+      type="text"
+      name="search"
+      class="form-control w-50 me-2"
+      placeholder="Buscar por título, autor o palabra clave ..."
+      value="{{ search|default:'' }}"
+    >
+    <button class="btn btn-outline-primary" type="submit">Buscar</button>
+  </form>
+
+  {% if posts %}
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for post in posts %}
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0">
+            {% if post.image %}
+              <img src="{{ post.image.url }}"
+                   class="card-img-top"
+                   alt="{{ post.title }}"
+                   style="height:180px; object-fit:contain;">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title fw-bold">{{ post.title }}</h5>
+              <p class="card-text small text-muted mb-1">
+                {{ post.author }} &middot; {{ post.category }} &middot; {{ post.created|date:"M d, Y" }}
+              </p>
+              <p class="card-text flex-grow-1">
+                {{ post.content|truncatewords:25 }}
+              </p>
+
+              {% if user.is_authenticated %}
+                {% if user.is_staff or post.author == user.get_full_name or post.author == user.username %}
+                  <div class="btn-group mt-auto">
+                    <a href="{% url 'blog:post_edit' post.id %}"
+                       class="btn btn-sm btn-outline-primary">Editar</a>
+                    <a href="{% url 'blog:post_delete' post.id %}"
+                       class="btn btn-sm btn-outline-dark">Eliminar</a>
+                  </div>
+                {% else %}
+                  <a href="{% url 'blog:post_detail' post.id %}"
+                     class="btn btn-sm btn-outline-primary mt-auto">Leer más</a>
+                {% endif %}
+              {% else %}
+                <a href="{% url 'blog:post_detail' post.id %}"
+                   class="btn btn-sm btn-outline-primary mt-auto">Leer más</a>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center">No se encontraron publicaciones.</p>
+  {% endif %}
+
+  {% if user.is_authenticated %}
+    <a href="{% url 'blog:post_create' %}" class="btn btn-dark mt-4">
+      ➕ Crear nueva publicación
+    </a>
+  {% endif %}
+
+</div>
+{% endblock %}
+
