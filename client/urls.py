@@ -1,12 +1,14 @@
 from django.urls import path
-from . import views
+from .views import (
+    ClientListView, ClientCreateView,
+    ClientUpdateView, ClientDeleteView
+)
 
-app_name = 'client'
+app_name = "client"
 
 urlpatterns = [
-    path('', views.client_list, name='client_list'),
-    path("clients/create/", views.client_create, name="client_create"), 
-    path("clients/<int:client_id>/edit/", views.client_edit, name="client_edit"), 
-    path("clients/<int:client_id>/delete/", views.client_delete, name="client_delete"),
-
+    path("list/",   ClientListView.as_view(),   name="client_list"),
+    path("create/", ClientCreateView.as_view(), name="client_create"),
+    path("<int:pk>/edit/",   ClientUpdateView.as_view(), name="client_edit"),
+    path("<int:pk>/delete/", ClientDeleteView.as_view(), name="client_delete"),
 ]

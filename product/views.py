@@ -1,126 +1,88 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 
-from .forms import ProductForm
 from .models import Product
+from .forms import ProductForm
+from core.view_mixins import StaffRequiredMixin  # ← el mixin que acabamos de crear
 
 
-# ───────────────────────────────────────────────────────────────────────────────
-# Helpers
-# ───────────────────────────────────────────────────────────────────────────────
-def is_staff(user):
-    """Retorna True si el usuario está autenticado y es empleado (is_staff)."""
-    return user.is_authenticated and user.is_staff
+# ─────────────────────────────────────────
+# CRUD para empleados (is_staff)
+# ─────────────────────────────────────────
+class ProductListView(LoginRequiredMixin, StaffRequiredMixin, ListView):
+    model = Product
+    template_name = "product/product_list.html"
+    context_object_name = "products"
+    ordering = ["title"]
+
+    def get_queryset(self):
+        query = self.request.GET.get("search", "").strip()
+        qs = super().get_queryset()
+        if query:
+            qs = qs.filter(
+                Q(title__icontains=query) |
+                Q(author__icontains=query) |
+                Q(category__name__icontains=query)
+            )
+        return qs
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["search"] = self.request.GET.get("search", "").strip()
+        return ctx
 
 
-# ───────────────────────────────────────────────────────────────────────────────
-# CRUD para empleados
-# ───────────────────────────────────────────────────────────────────────────────
-@user_passes_test(is_staff)
-def product_create(request):
-    """
-    Crea un nuevo producto.
-    GET  → muestra formulario vacío.
-    POST → valida, guarda y redirige al listado con mensaje de éxito.
-    """
-    if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Producto creado correctamente.")
-            return redirect("product:product_list")
-    else:
-        form = ProductForm()
-
-    return render(request, "product/product_form.html", {"form": form})
+class ProductCreateView(LoginRequiredMixin, StaffRequiredMixin,
+                        SuccessMessageMixin, CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "product/product_form.html"
+    success_url = reverse_lazy("product:product_list")
+    success_message = "Producto creado correctamente."
 
 
-@user_passes_test(is_staff)
-def product_list(request):
-    """
-    Lista de productos para empleados con filtro opcional (?search=).
-    Filtra por título, autor o nombre de categoría (ForeignKey).
-    """
-    query = request.GET.get("search", "").strip()
-
-    if query:
-        products = Product.objects.filter(
-            Q(title__icontains=query) |
-            Q(author__icontains=query) |
-            Q(category__name__icontains=query)
-        ).order_by("title")
-    else:
-        products = Product.objects.all().order_by("title")
-
-    context = {"products": products, "search": query}
-    return render(request, "product/product_list.html", context)
+class ProductUpdateView(LoginRequiredMixin, StaffRequiredMixin,
+                        SuccessMessageMixin, UpdateView):
+    model = Product
+    form_class = ProductForm
+    template_name = "product/product_form.html"
+    success_url = reverse_lazy("product:product_list")
+    success_message = "Producto actualizado correctamente."
 
 
-@user_passes_test(is_staff)
-def product_edit(request, product_id):
-    """
-    Edita un producto existente.
-    GET  → muestra formulario con datos actuales.  
-    POST → guarda cambios y redirige con mensaje de éxito.
-    """
-    product = get_object_or_404(Product, id=product_id)
-
-    if request.method == "POST":
-        form = ProductForm(request.POST, request.FILES, instance=product)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Producto actualizado correctamente.")
-            return redirect("product:product_list")
-    else:
-        form = ProductForm(instance=product)
-
-    return render(request, "product/product_form.html", {"form": form})
+class ProductDeleteView(LoginRequiredMixin, StaffRequiredMixin,
+                        SuccessMessageMixin, DeleteView):
+    model = Product
+    template_name = "product/product_confirm_delete.html"
+    success_url = reverse_lazy("product:product_list")
+    success_message = "Producto eliminado correctamente."
 
 
-@user_passes_test(is_staff)
-def product_delete(request, product_id):
-    """
-    Elimina un producto tras confirmación.
-    GET  → muestra plantilla de confirmación.  
-    POST → borra y redirige con mensaje de éxito.
-    """
-    product = get_object_or_404(Product, id=product_id)
+# ─────────────────────────────────────────
+# Catálogo público (sin login)
+# ─────────────────────────────────────────
+class CatalogListView(ListView):
+    model = Product
+    template_name = "product/product_catalog.html"
+    context_object_name = "products"
+    ordering = ["title"]
 
-    if request.method == "POST":
-        product.delete()
-        messages.success(request, "Producto eliminado correctamente.")
-        return redirect("product:product_list")
+    def get_queryset(self):
+        query = self.request.GET.get("search", "").strip()
+        qs = super().get_queryset()
+        if query:
+            qs = qs.filter(
+                Q(title__icontains=query) |
+                Q(author__icontains=query) |
+                Q(category__name__icontains=query)
+            )
+        return qs
 
-    return render(request, "product/product_confirm_delete.html", {"product": product})
-
-
-# ───────────────────────────────────────────────────────────────────────────────
-# Catálogo público
-# ───────────────────────────────────────────────────────────────────────────────
-def catalog_view(request):
-    """
-    Muestra el catálogo público en formato tarjetas con búsqueda opcional.
-    Se filtra por título, autor o nombre de categoría.  
-    """
-    query = request.GET.get("search", "").strip()
-
-    if query:
-        products = Product.objects.filter(
-            Q(title__icontains=query) |
-            Q(author__icontains=query) |
-            Q(category__name__icontains=query)
-        ).order_by("title")
-    else:
-        products = Product.objects.all().order_by("title")
-
-    context = {"products": products, "search": query}
-    return render(request, "product/product_catalog.html", context)
-
-
-
-
-
-
-
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["search"] = self.request.GET.get("search", "").strip()
+        return ctx

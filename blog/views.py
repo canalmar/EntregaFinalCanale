@@ -1,87 +1,144 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q
+"""
+blog/views.py
+──────────────
+Vistas basadas en clases (CBV) para el módulo Blog.
+
+Convenciones del proyecto
+─────────────────────────
+- Nombres de clases, funciones y variables en inglés (profesional).
+- Docstrings y mensajes al usuario en español.
+- Principio DRY: reutilizamos mixins y evitamos repetir lógica.
+"""
+
+from typing import Any, Dict
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    UserPassesTestMixin,
+)
+from django.db.models import Q
+from django.urls import reverse_lazy
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
+from django.contrib.messages.views import SuccessMessageMixin
+
 from .models import Post
 from .forms import PostForm
 
 
-def is_staff(user):
-    return user.is_authenticated and user.is_staff
+# ──────────────────────────────────────────────────────────────
+# Mixins
+# ──────────────────────────────────────────────────────────────
+class AuthorOrStaffRequiredMixin(UserPassesTestMixin):
+    """
+    Permite el acceso si el usuario es staff o es autor del objeto.
+    Se usa para UpdateView y DeleteView de Post.
+    """
 
+    def test_func(self) -> bool:
+        """Verifica si el usuario actual es staff o autor del post."""
+        obj: Post = self.get_object()  # type: ignore[attr-defined]
+        user = self.request.user
+        return user.is_staff or obj.author == (user.get_full_name() or user.username)
 
-# ───────────────────────────────────────
-# PÚBLICO
-# ───────────────────────────────────────
-def post_list(request):
-    query = request.GET.get("search", "").strip()
-    if query:
-        posts = Post.objects.filter(
-            Q(title__icontains=query) |
-            Q(content__icontains=query) |
-            Q(category__name__icontains=query)
+    def handle_no_permission(self):
+        """Muestra mensaje de error y redirige si no tiene permiso."""
+        messages.error(
+            self.request,
+            "No tienes permiso para realizar esta acción.",
         )
-    else:
-        posts = Post.objects.all()
-    return render(request, "blog/post_list.html",
-                  {"posts": posts.order_by("-created"), "search": query})
+        return super().handle_no_permission()
 
 
-def post_detail(request, post_id):
-    """Vista pública de detalle (opcional, pero útil)."""
-    post = get_object_or_404(Post, id=post_id)
-    return render(request, "blog/post_detail.html", {"post": post})
+# ──────────────────────────────────────────────────────────────
+# Vistas públicas
+# ──────────────────────────────────────────────────────────────
+class PostListView(ListView):
+    """
+    Lista pública de posts con búsqueda opcional.
+    URL esperada: /blog/posts/?search=palabra
+    """
+
+    model = Post
+    template_name = "blog/post_list.html"
+    context_object_name = "posts"
+    paginate_by = 10  # Ajustable
+
+    def get_queryset(self):
+        """Filtra por término de búsqueda y ordena por fecha desc."""
+        query: str = self.request.GET.get("search", "").strip()
+        qs = Post.objects.all()
+        if query:
+            qs = qs.filter(
+                Q(title__icontains=query)
+                | Q(content__icontains=query)
+                | Q(category__name__icontains=query)
+            )
+        return qs.order_by("-created")
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        """Agrega 'search' al contexto para mantener el valor en la plantilla."""
+        context = super().get_context_data(**kwargs)
+        context["search"] = self.request.GET.get("search", "").strip()
+        return context
 
 
-# ───────────────────────────────────────
-# CRUD
-# ───────────────────────────────────────
-# ───CREATE─────────
-@login_required
-def post_create(request):
+class PostDetailView(DetailView):
+    """Vista pública de detalle de un post."""
+    model = Post
+    template_name = "blog/post_detail.html"
+    context_object_name = "post"
+
+
+# ──────────────────────────────────────────────────────────────
+# CRUD (requieren autenticación)
+# ──────────────────────────────────────────────────────────────
+class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """
     Crea un nuevo post.
-    - cualquier usuario autenticado
+    - Cualquier usuario autenticado.
     """
-    if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user.get_full_name() or request.user.username
-            post.save()
-            messages.success(request, "Publicación creada correctamente.")
-            return redirect("blog:post_list")
-    else:
-        form = PostForm()
-    return render(request, "blog/post_form.html", {"form": form})
+    model = Post
+    form_class = PostForm
+    template_name = "blog/post_form.html"
+    success_url = reverse_lazy("blog:post_list")
+    success_message = "Publicación creada correctamente."
+
+    def form_valid(self, form):
+        """Asigna el autor antes de guardar."""
+        post: Post = form.save(commit=False)  # type: ignore[assignment]
+        post.author = self.request.user.get_full_name() or self.request.user.username
+        post.save()
+        return super().form_valid(form)
 
 
-@login_required
-def post_edit(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    if not (request.user.is_staff or post.author == (request.user.get_full_name() or request.user.username)):
-        messages.error(request, "No tienes permiso para editar este post.")
-        return redirect("blog:post_list")
-    if request.method == "POST":
-        form = PostForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Publicación actualizada correctamente.")
-            return redirect("blog:post_list")
-    else:
-        form = PostForm(instance=post)
-    return render(request, "blog/post_form.html", {"form": form})
+class PostUpdateView(
+    LoginRequiredMixin,
+    AuthorOrStaffRequiredMixin,
+    SuccessMessageMixin,
+    UpdateView,
+):
+    """Actualiza un post existente (autor o staff)."""
+    model = Post
+    form_class = PostForm
+    template_name = "blog/post_form.html"
+    success_url = reverse_lazy("blog:post_list")
+    success_message = "Publicación actualizada correctamente."
 
 
-@login_required
-def post_delete(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    if not (request.user.is_staff or post.author == (request.user.get_full_name() or request.user.username)):
-        messages.error(request, "No tienes permiso para eliminar este post.")
-        return redirect("blog:post_list")
-    if request.method == "POST":
-        post.delete()
-        messages.success(request, "Publicación eliminada correctamente.")
-        return redirect("blog:post_list")
-    return render(request, "blog/post_confirm_delete.html", {"post": post})
-
+class PostDeleteView(
+    LoginRequiredMixin,
+    AuthorOrStaffRequiredMixin,
+    SuccessMessageMixin,
+    DeleteView,
+):
+    """Elimina un post existente (autor o staff)."""
+    model = Post
+    template_name = "blog/post_confirm_delete.html"
+    success_url = reverse_lazy("blog:post_list")
+    success_message = "Publicación eliminada correctamente."

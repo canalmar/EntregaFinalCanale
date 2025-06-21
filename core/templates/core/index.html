@@ -11,7 +11,7 @@
       Sumate a nuestra comunidad lectora. Explorá nuestro catálogo, descubrí libros recomendados y conocé más a través del blog.
     </p>
     <div class="d-flex flex-wrap gap-3 mt-4">
-      <a href="{% url 'product:product_catalog' %}" class="btn btn-dark btn-custom">Explorar Catálogo</a>
+      <a href="{% url 'product:catalog_view' %}" class="btn btn-dark btn-custom">Explorar Catálogo</a>
       <a href="{% url 'blog:post_list' %}" class="btn btn-outline-dark btn-custom">Ir al Blog</a>
     </div>
   </div>
@@ -25,7 +25,7 @@
 <div class="container mb-5">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2 class="fw-bold">Libros Destacados</h2>
-    <a href="{% url 'product:product_catalog' %}" class="btn btn-outline-secondary btn-sm">Ver todos</a>
+    <a href="{% url 'product:catalog_view' %}" class="btn btn-outline-secondary btn-sm">Ver todos</a>
   </div>
   <div class="row g-4">
     

@@ -1,0 +1,62 @@
+{# core/templates/registration/register.html #}
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Crear cuenta | Tienda de Historias{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center py-5" style="min-height:75vh;">
+  <div class="card shadow-sm rounded-4 border-0 overflow-hidden" style="max-width:900px; width:100%;">
+    <div class="row g-0">
+
+      <div class="col-md-6 d-none d-md-block">
+        <img src="{% static 'tienda/img/people_reading.jpg' %}"
+             class="img-fluid h-100" style="object-fit:cover;"; alt="Personas leyendo">
+      </div>
+
+      <div class="col-md-6 p-5 bg-white">
+        <h3 class="text-center fw-bold mb-4">Crear una cuenta</h3>
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <!-- Usuario -->
+          <div class="mb-3">
+            {{ form.username.label_tag }} {{ form.username }}
+            {% for e in form.username.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            {{ form.email.label_tag }} {{ form.email }}
+            {% for e in form.email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+
+          <!-- Contraseña -->
+          <div class="mb-3">
+            {{ form.password1.label_tag }} {{ form.password1 }}
+            {% if form.password1.help_text %}<div class="form-text small">{{ form.password1.help_text }}</div>{% endif %}
+            {% for e in form.password1.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+
+          <!-- Confirmar contraseña -->
+          <div class="mb-4">
+            {{ form.password2.label_tag }} {{ form.password2 }}
+            {% for e in form.password2.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+
+          <button class="btn btn-dark w-100" type="submit">Registrarme</button>
+        </form>
+
+        <p class="text-center mt-3 mb-0">
+          ¿Ya tienes cuenta? <a href="{% url 'core:login' %}">Iniciar sesión</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
