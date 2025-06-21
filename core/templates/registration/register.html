@@ -11,7 +11,7 @@
 
       <div class="col-md-6 d-none d-md-block">
         <img src="{% static 'tienda/img/people_reading.jpg' %}"
-             class="img-fluid h-100" style="object-fit:cover;"; alt="Personas leyendo">
+             class="img-fluid h-100" style="object-fit:cover;" alt="Personas leyendo">
       </div>
 
       <div class="col-md-6 p-5 bg-white">
@@ -30,10 +30,34 @@
             {% for e in form.username.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
           </div>
 
+          <div class="mb-3">
+            <!-- Nombre -->
+            {{ form.first_name.label_tag }} {{ form.first_name }}
+            {% for e in form.first_name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+          <!-- Apellido -->
+          <div class="mb-3">
+
+            {{ form.last_name.label_tag }} {{ form.last_name }}
+            {% for e in form.last_name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
           <!-- Email -->
           <div class="mb-3">
+
             {{ form.email.label_tag }} {{ form.email }}
             {% for e in form.email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+          <!-- Dirección -->
+          <div class="mb-3">
+
+            {{ form.address.label_tag }} {{ form.address }}
+            {% for e in form.address.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+          <!-- Teléfono -->
+          <div class="mb-3">
+
+            {{ form.phone.label_tag }} {{ form.phone }}
+            {% for e in form.phone.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
           </div>
 
           <!-- Contraseña -->

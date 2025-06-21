@@ -26,6 +26,7 @@
           <th>Nombre</th>
           <th>Email</th>
           <th>Teléfono</th>
+          <th>Dirección</th>
           <th class="text-center">Acciones</th>
         </tr>
       </thead>
@@ -36,6 +37,7 @@
             <td>{{ client.first_name }}</td>
             <td>{{ client.email }}</td>
             <td>{{ client.phone }}</td>
+            <td>{{ client.address }}</td>
             <td class="text-center">
               <a href="{% url 'client:client_edit' client.id %}"
                  class="btn btn-sm btn-outline-primary me-2">Editar</a>

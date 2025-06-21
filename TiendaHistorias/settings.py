@@ -35,7 +35,8 @@ INSTALLED_APPS = [
     "django.contrib.humanize",  # filtros útiles de formato
     # Apps propias
     "core",
-    "client",
+    #"client",
+    "client.apps.ClientConfig",
     "product",
     "blog",
 ]
