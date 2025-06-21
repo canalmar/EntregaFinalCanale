@@ -1,0 +1,47 @@
+{% extends "core/base.html" %}
+{% block title %}Perfil | Tienda de Historias{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 800px;">
+  <h2 class="fw-bold mb-4">Mi perfil</h2>
+
+  <!-- Tabla resumen -->
+  <table class="table table-striped shadow-sm">
+    <tbody>
+      <tr><th class="w-25">Usuario</th><td>{{ user.username }}</td></tr>
+      <tr><th>Nombre</th><td>{{ user.first_name|default:"—" }}</td></tr>
+      <tr><th>Apellido</th><td>{{ user.last_name|default:"—" }}</td></tr>
+      <tr><th>Correo</th><td>{{ user.email|default:"—" }}</td></tr>
+      <tr><th>Teléfono</th><td>{{ user.profile.phone|default:"—" }}</td></tr>
+      <tr><th>Dirección</th><td>{{ user.profile.address|default:"—" }}</td></tr>
+      <tr><th>Fecha de ingreso</th><td>{{ user.date_joined|date:"d/m/Y H:i" }}</td></tr>
+    </tbody>
+  </table>
+
+  <hr class="my-4">
+
+  <!-- Formulario de edición -->
+  <h4 class="mb-3">Editar datos</h4>
+  <form method="post" class="row g-3">
+    {% csrf_token %}
+    {% for field in user_form %}
+      <div class="col-md-6">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+      </div>
+    {% endfor %}
+    {% for field in profile_form %}
+      <div class="col-md-6">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="text-danger small">{{ field.errors }}</div>{% endif %}
+      </div>
+    {% endfor %}
+    <div class="col-12 d-flex justify-content-end">
+      <button type="submit" class="btn btn-dark px-4">Guardar cambios</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
