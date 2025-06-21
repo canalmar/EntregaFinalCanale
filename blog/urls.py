@@ -1,3 +1,9 @@
+"""
+Rutas de la aplicación Blog.
+
+Define las URL para listar, ver detalle, crear, editar y eliminar publicaciones.
+"""
+
 from django.urls import path
 from . import views
 

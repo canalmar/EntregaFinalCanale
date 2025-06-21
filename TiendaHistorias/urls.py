@@ -1,36 +1,54 @@
 """
-URL configuration for TiendaHistorias project.
+TiendaHistorias/urls.py
+───────────────────────
+Enruta las URL principales del proyecto:
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+• Admin                → /admin/
+• Core (home, auth)    → /
+• Productos            → /productos/
+• Clientes             → /clientes/
+• Blog                 → /blog/
+• Perfil por defecto   → /accounts/profile/  (redirige al perfil custom)
+• Archivos estáticos   → solo en DEBUG (media + static)
+
+Notas
+─────
+- Mantenemos `django.contrib.auth.urls` para aprovechar vistas predeterminadas
+  (password_reset, logout, etc.).
+- En producción (`DEBUG = False`) delegá la entrega de archivos estáticos
+  al servidor (Nginx, Apache) o un CDN.
 """
-from django.contrib import admin
-from django.urls import path, include
+
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
+
 from core.views import profile_redirect
 
 urlpatterns = [
+    # Panel de administración
     path("admin/", admin.site.urls),
-    path("", include("core.urls")),                # Home
-    path("accounts/", include("django.contrib.auth.urls")),
+
+    # Apps locales
+    path("", include("core.urls")),              # Home + auth custom
     path("productos/", include("product.urls")),
     path("clientes/", include("client.urls")),
     path("blog/", include("blog.urls")),
+
+    # Auth por defecto de Django (password_reset, etc.)
+    path("accounts/", include("django.contrib.auth.urls")),
+
+    # Redirección del perfil por defecto → perfil custom
     path("accounts/profile/", profile_redirect, name="profile_redirect"),
 ]
 
-# Archivos subidos (solo en desarrollo)
+# ----------------------------------------------------------------------
+# Servir archivos estáticos y subidos solo en desarrollo
+# ----------------------------------------------------------------------
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+    urlpatterns += static(
+        settings.STATIC_URL,
+        document_root=settings.STATICFILES_DIRS[0],
+    )

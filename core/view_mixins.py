@@ -1,34 +1,54 @@
 """
 core/view_mixins.py
 ───────────────────
-Mixins reutilizables en todo el proyecto.
+Mixins de autorización reutilizables en todo el proyecto.
 
 Convenciones
 ────────────
-- Solo lógica de autorización / reutilizable.
-- Docstrings en español.
+- Solo contienen lógica de permisos (no vistas completas).
+- Identificadores en inglés; docstrings y mensajes al usuario en español.
 """
 
-from django.contrib.auth.mixins import UserPassesTestMixin
+from typing import Any
+
 from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
+__all__ = ["StaffRequiredMixin"]  # Export explícito
 
+
+# ──────────────────────────────────────────────────────────────
+# Mixins de permisos
+# ──────────────────────────────────────────────────────────────
 class StaffRequiredMixin(UserPassesTestMixin):
     """
-    Permite acceso solo a usuarios *staff* (is_staff=True).
+    Restringe el acceso a usuarios con `is_staff=True`.
 
-    Uso:
+    Ejemplo de uso:
         class ProductListView(LoginRequiredMixin, StaffRequiredMixin, ListView):
-            ...
+            model = Product
+            template_name = "product/product_list.html"
     """
 
-    # Lógica principal
-    def test_func(self):
+    # Mensaje reutilizable
+    MSG_NO_PERMISSION: str = "No tienes permiso para acceder a esta vista."
+
+    # ----------------------------------------------------------
+    # Métodos de UserPassesTestMixin
+    # ----------------------------------------------------------
+    def test_func(self) -> bool:  # type: ignore[override]
+        """Retorna `True` si el usuario es miembro del staff."""
         return self.request.user.is_staff
 
-    # Redirección en caso de permisos insuficientes
     def handle_no_permission(self):
-        messages.error(self.request, "No tienes permiso para acceder a esta vista.")
-        return HttpResponseRedirect(reverse_lazy("core:home"))  # Ajusta la ruta si es necesario
+        """
+        Maneja la redirección cuando el usuario no cumple la condición.
+
+        - Muestra un mensaje de error con `django.contrib.messages`.
+        - Redirige a la ruta “home” (ajusta `reverse_lazy` si cambia).
+        """
+        messages.error(self.request, self.MSG_NO_PERMISSION)
+        return HttpResponseRedirect(reverse_lazy("core:home"))
+
