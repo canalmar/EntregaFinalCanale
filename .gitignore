@@ -7,6 +7,8 @@ __pycache__/
 
 # Base de datos local
 db.sqlite3
+db_demo.sqlite3
+
 
 # Configuración del entorno de desarrollo (VSCode, logs, etc.)
 .vscode/

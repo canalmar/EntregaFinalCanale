@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -86,3 +86,16 @@ class CatalogListView(ListView):
         ctx = super().get_context_data(**kwargs)
         ctx["search"] = self.request.GET.get("search", "").strip()
         return ctx
+
+class ProductDetailView(DetailView):
+    """
+    Muestra el detalle de un libro.
+
+    - Usa CBV (DetailView).
+    - No requiere login para ver.
+    - Si el usuario es staff, en la plantilla
+      se mostrarán botones de Edit/Delete.
+    """
+    model = Product
+    template_name = "product/product_detail.html"
+    context_object_name = "product"

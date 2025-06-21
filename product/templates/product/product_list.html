@@ -49,6 +49,9 @@
             </td>
             <td class="text-center">
               <div class="btn-group" role="group">
+                <!-- NUEVO: botón Ver detalle -->
+                <a href="{% url 'product:product_detail' product.id %}"
+                   class="btn btn-sm btn-outline-info">Ver</a>
                 <a href="{% url 'product:product_edit' product.id %}"
                    class="btn btn-sm btn-outline-primary">Editar</a>
                 <a href="{% url 'product:product_delete' product.id %}"
@@ -68,3 +71,4 @@
   </a>
 </div>
 {% endblock %}
+

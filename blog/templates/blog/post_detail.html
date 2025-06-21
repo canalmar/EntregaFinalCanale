@@ -1,15 +1,37 @@
 {% extends "core/base.html" %}
+{% load static %}
+
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
 <div class="container my-4" style="max-width:800px;">
   <h2 class="fw-bold mb-2">{{ post.title }}</h2>
-  <p class="text-muted mb-3">
+  <p class="text-muted mb-4">
     {{ post.author }} · {{ post.category }} · {{ post.created|date:"M d, Y" }}
   </p>
-  {% if post.image %}
-    <img src="{{ post.image.url }}" class="img-fluid mb-4" alt="{{ post.title }}">
-  {% endif %}
-  <p>{{ post.content|safe }}</p>
+
+  <div class="row g-4">
+    <!-- Columna de la imagen -->
+    <div class="col-12 col-md-4">
+      {% if post.image %}
+        <img src="{{ post.image.url }}"
+             class="img-fluid shadow-sm"
+             alt="{{ post.title }}"
+             style="width:100%; height:180px; object-fit:contain; background:#ffffff;">
+      {% else %}
+        <img src="{% static 'tienda/img/tienda_de_historias_mini.png' %}"
+             class="img-fluid shadow-sm"
+             alt="Tienda de Historias"
+             style="width:100%; height:180px; object-fit:contain; background:#ffffff;">
+      {% endif %}
+    </div>
+
+    <!-- Columna del contenido -->
+    <div class="col-12 col-md-8">
+      <div style="text-align:justify;">
+        {{ post.content|safe }}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

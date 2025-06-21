@@ -23,7 +23,8 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
       {% for product in products %}
         <div class="col">
-          <div class="card h-100 shadow-sm border-0">
+          <!-- position-relative → necesario para .stretched-link -->
+          <div class="card h-100 shadow-sm border-0 position-relative">
             {% if product.image %}
               <img src="{{ product.image.url }}" class="card-img-top rounded-top"
                    alt="{{ product.title }}" style="height: 200px; object-fit: contain;">
@@ -44,6 +45,10 @@
               {% endif %}
               <p class="fw-bold text-primary fs-5 mb-0">${{ product.price }}</p>
             </div>
+
+            <!-- ENLACE AL DETALLE: cubre toda la tarjeta -->
+            <a href="{% url 'product:product_detail' product.id %}"
+               class="stretched-link" aria-label="Ver detalle de {{ product.title }}"></a>
           </div>
         </div>
       {% endfor %}
