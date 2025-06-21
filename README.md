@@ -1,125 +1,144 @@
-# Tienda de Historias — Django Project (Coderhouse • Entrega 3)
+# Tienda de Historias 📚
 
-_E‑commerce y blog para una librería física & online._
+Tienda de Historias es un portal literario desarrollado con Django 5.2 para la entrega final del curso Python / Django de Coderhouse.
 
----
+Los visitantes pueden explorar un catálogo de libros, buscar por título, autor o categoría y sumarse a la comunidad lectora a través del blog.
 
-## Tabla de contenidos
-1. [Descripción](#descripción)
-2. [Estructura de apps](#estructura-de-apps)
-3. [Tecnologías](#tecnologías)
-4. [Instalación rápida](#instalación-rápida)
-5. [Uso](#uso)
-6. [Flujo de permisos](#flujo-de-permisos)
-7. [Consideraciones](#consideraciones)
-8. [Autor](#autor)
+El staff (usuarios con is_staff=True) gestiona productos y clientes desde la interfaz interna.
+
+Por simplicidad académica no se incluyen carrito de compras ni pagos en línea; el foco está en la administración de contenidos y usuarios. 
 
 ---
-
-## Descripción
-
-**Tienda de Historias** implementa:
-
-| Módulo | Funcionalidad |
-|--------|---------------|
-| **Core**    | Home, navbar, login/logout, mensajes flash. |
-| **Product** | Catálogo público (+ búsqueda) y CRUD de productos para empleados. |
-| **Client**  | CRUD de clientes para empleados. |
-| **Blog**    | Blog público + cualquier usuario autenticado puede crear posts; empleados pueden editar/eliminar. |
-
----
-
-## Estructura de apps
-
-```text
-## Estructura de apps
-
-TiendaHistorias/  
-│  
-├── core/                     # Página de inicio y navegación  
-│   ├── templates/  
-│   │   └── core/  
-│   │       ├── base.html     # Layout Bootstrap común  
-│   │       └── index.html    # Home  
-│   └── views.py  
-│  
-├── product/  
-│   ├── models.py             # Product, Category  
-│   ├── views.py              # CRUD + catálogo  
-│   ├── forms.py  
-│   └── templates/  
-│       └── product/  
-│           └── …  
-│  
-├── client/  
-│   ├── models.py             # Client  
-│   ├── views.py              # CRUD  
-│   ├── forms.py  
-│   └── templates/  
-│       └── client/  
-│           └── …  
-│  
-├── blog/  
-│   ├── models.py             # Post, Category  
-│   ├── views.py              # CRUD + listado  
-│   ├── forms.py  
-│   └── templates/  
-│       └── blog/  
-│           └── …  
-│  
-├── static/                   # CSS, imágenes (login, no-image) 
-```
-
----
-
-## Tecnologías
-Django 5.2 · Python 3.13 · Bootstrap 5.3
-
----
-
-## Instalación rápida
+## 🚀 Demo rápida
 
 ```bash
-git clone https://github.com/canalmar/TuPrimeraPaginaCanale.git
-cd TuPrimeraPaginaCanale
-python -m venv .venv  
-# Activar entorno virtual → Windows: .venv\Scripts\activate | Mac/Linux: source .venv/bin/activate 
+# 1️⃣ Crear y activar entorno virtual
+python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# 2️⃣ Instalar dependencias
 pip install -r requirements.txt
+
+# 3️⃣ Aplicar migraciones
 python manage.py migrate
+
+# 4️⃣ Crear superusuario (elige usuario y contraseña)
 python manage.py createsuperuser
-python manage.py runserver
+
+# 5️⃣ (Opcional) Cargar datos de ejemplo
+python manage.py loaddata demo  # categorías, productos, posts
+
+# 6️⃣ Levantar el servidor
+python manage.py runserver  # abre http://127.0.0.1:8000/
+|
+
+---
+## 🎬 Video demo
+Subido a YouTube 👉 `[pendiente de agregar](#)` (máx. 10 minutos).
+
+---
+## 🗂️ Apps y estructura
+| App | Propósito | Modelos principales |
+|-----|-----------|--------------------|
+| **core** | Home, About, autenticación, perfiles | `Profile` |
+| **client** | Gestión de clientes (staff) | `Client` |
+| **product** | Catálogo y CRUD de productos | `Category`, `Product` |
+| **blog** | Publicación de posts | `Category`, `Post` |
+
+---
+## 🔑 Funcionalidades
+- **Registro extendido** con e-mail, teléfono y dirección.
+- **Login / Logout** usando formularios Bootstrap.
+- **CRUD completo para staff** (productos, clientes, posts).
+- **Catálogo público** con buscador y vista de detalle.
+- **Blog** con categorías y búsqueda.
+- **Perfil de usuario** editable (datos personales y contacto).
+- **Internacionalización** (es-AR).
+- **Subida de imágenes** (productos y posts).
+
+---
+## 🛠️ Instalación detallada
+1. **Clonar** el repo:
+   ```bash
+   git clone https://github.com/usuario/TiendaHistorias.git && cd TiendaHistorias
+   ```
+2. **Crear entorno** virtual y activar.
+3. **Instalar** dependencias:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. **Crear base de datos** y aplicar migraciones:
+   ```bash
+   python manage.py migrate
+   ```
+5. **Cargar datos de prueba**:
+   ```bash
+   python manage.py loaddata demo        # usa fixtures/demo.json
+   ```
+6. **Levantar** el servidor:
+   ```bash
+   python manage.py runserver
+   ```
+
+### Variables opcionales (.env)
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `DJANGO_SECRET_KEY` | Clave secreta en producción | `changeme` |
+| `DEBUG` | 0 / 1 | `0` |
+
+---
+## 📂 Demo data (`fixtures/demo.json`)
+Incluye:
+- 5 categorías
+- 6 productos con imágenes
+- 3 posts de blog
+- Usuarios: admin, staff y cliente (ver tabla superior)
+
+Cargar:
+```bash
+python manage.py loaddata demo
 ```
-Abrir en el navegador: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ---
+## 🖼️ Capturas de pantalla
+<details>
+  <summary>Home + Catálogo</summary>
 
-## Uso
+  ![Home](docs/img/home.png)
+  ![Catálogo](docs/img/catalogo.png)
+</details>
 
-| URL | Descripción |
-|-----|-------------|
-| `/` | Home |
-| `/productos/catalogo/ ` | Catálogo público |
-| `/blog/posts/` | Blog público |
-| `/blog/posts/create/` | Crear post (login requerido) |
-| `/productos/list/` | CRUD productos (staff) |
-| `/clientes/` | CRUD clientes (staff) |
+<details>
+  <summary>Panel Staff</summary>
 
-
-## Flujo de permisos
-
-| Rol | Acceso |
-|-----|--------|
-| Visitante | Home, Catálogo, Blog |
-| Usuario autenticado | + Crear nuevo post | 
-| Empleado (`is_staff`) | + Gestión productos, clientes, editar / eliminar cualquier post | 
-
-Sesiones expiran al cerrar el navegador.
+  ![Productos](docs/img/staff_productos.png)
+  ![Clientes](docs/img/staff_clientes.png)
+</details>
 
 ---
+## 🏗️ Stack técnico
+- **Python 3.12**
+- **Django 5.2.x**
+- SQLite (dev) / PostgreSQL (sugerido en prod)
+- Bootstrap 5
+- Docker (opcional)
 
-## Consideraciones
-Para facilitar la evaluación del Trabajo Práctico, se suben al repositorio los archivos db.sqlite3 y media/, que permiten visualizar el contenido precargado y las imágenes asociadas.
+---
+## 📜 Comandos útiles
+| Acción | Comando |
+|--------|---------|
+| Migrar | `python manage.py makemigrations && python manage.py migrate` |
+| Crear superusuario | `python manage.py createsuperuser` |
+| Tests | `python manage.py test` |
+| Colectar estáticos | `python manage.py collectstatic` |
+
+---
+## 🏗️ Despliegue (resumen)
+1. Preparar variables de entorno y DB PostgreSQL.
+2. `python manage.py collectstatic --noinput`
+3. Servir con Gunicorn + Nginx o plataforma preferida.
+
+---
+## 👩‍💻 Autor
+**Marisa Canale**   
 
 
-## Autor
-**Marisa Canale** – Coderhouse Python & Django 2025
