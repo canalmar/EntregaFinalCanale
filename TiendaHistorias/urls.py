@@ -21,14 +21,16 @@ from django.conf.urls.static import static
 from core.views import profile_redirect
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('core.urls')),                  # Ruta raíz: home
+    path("admin/", admin.site.urls),
+    path("", include("core.urls")),                # Home
     path("accounts/", include("django.contrib.auth.urls")),
-    path('productos/', include('product.urls')),
-    path('clientes/', include('client.urls')),
-    path('blog/', include('blog.urls')),
-    path('accounts/profile/', profile_redirect, name='profile_redirect'),
+    path("productos/", include("product.urls")),
+    path("clientes/", include("client.urls")),
+    path("blog/", include("blog.urls")),
+    path("accounts/profile/", profile_redirect, name="profile_redirect"),
 ]
 
+# Archivos subidos (solo en desarrollo)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])

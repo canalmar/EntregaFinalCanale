@@ -2,17 +2,27 @@
 {% load custom_filters %}
 
 {% block title %}
+  {% if object.pk %}
+    Editar Producto
+  {% else %}
     Crear Producto
+  {% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="container mt-3">
-  <h2 class="mb-4" style="font-family: 'Segoe UI', sans-serif; font-weight: 600; color: #333;">Crear nuevo producto</h2>
+  <h2 class="mb-4" style="font-family:'Segoe UI',sans-serif;font-weight:600;color:#333;">
+    {% if object.pk %}
+      Editar producto
+    {% else %}
+      Crear producto
+    {% endif %}
+  </h2>
 
   <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
     {% csrf_token %}
-
     <div class="row g-3">
+
       <!-- Título -->
       <div class="col-md-6">
         <label for="{{ form.title.id_for_label }}" class="form-label">Título</label>
@@ -79,7 +89,7 @@
 
     <!-- Botones -->
     <div class="mt-4 d-flex gap-3">
-      <button type="submit" class="btn" style="background-color: #444; color: white;">Guardar</button>
+      <button type="submit" class="btn btn-dark">Guardar</button>
       <a href="{% url 'product:product_list' %}" class="btn btn-outline-dark">Cancelar</a>
     </div>
   </form>

@@ -10,6 +10,6 @@
   {% if post.image %}
     <img src="{{ post.image.url }}" class="img-fluid mb-4" alt="{{ post.title }}">
   {% endif %}
-  <p>{{ post.content|linebreaks }}</p>
+  <p>{{ post.content|safe }}</p>
 </div>
 {% endblock %}

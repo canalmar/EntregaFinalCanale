@@ -124,6 +124,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"     # para collectstatic en producción
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+FIXTURE_DIRS = [BASE_DIR / "fixtures"]
+
 # ─────────────────────────────────────────────────────────
 #  Autenticación
 # ─────────────────────────────────────────────────────────

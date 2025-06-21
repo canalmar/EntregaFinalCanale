@@ -23,6 +23,8 @@ class ClientListView(LoginRequiredMixin, StaffRequiredMixin, ListView):
     def get_queryset(self):
         query = self.request.GET.get("search", "").strip()
         qs = super().get_queryset()
+        # descartar clientes sin nombre ni apellido
+        qs = qs.exclude(first_name__exact="", last_name__exact="")
         if query:
             qs = qs.filter(
                 Q(first_name__icontains=query) |
