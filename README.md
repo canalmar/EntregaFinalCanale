@@ -4,7 +4,7 @@ Tienda de Historias es un portal literario desarrollado con Django 5.2 para la 
 
 Los visitantes pueden explorar un catálogo de libros, buscar por título, autor o categoría y sumarse a la comunidad lectora a través del blog, que requiere login para publicar.
 
-El staff (usuarios con is_staff=True) gestiona productos, clientes y blog desde la interfaz interna.
+El staff gestiona productos, clientes y blog desde la interfaz interna.
 
 Por simplicidad académica no se incluyen carrito de compras ni pagos en línea; el foco está en la administración de contenidos y usuarios. 
 
@@ -61,14 +61,30 @@ python manage.py runserver  # abre http://127.0.0.1:8000/
 
 ---
 ## 🛤️ Rutas principales
-| Ruta                  | Descripción                                 |
-|-----------------------|---------------------------------------------|
-| `/`                   | Home, login, registro, perfil, about        |
-| `/productos/`         | Catálogo público y gestión de productos     |
-| `/clientes/`          | Gestión de clientes (staff)                 |
-| `/blog/`              | Listado, detalle y gestión de posts         |
-| `/admin/`             | Panel de administración Django              |
-| `/accounts/`          | URLs de autenticación por defecto           |
+
+| Ruta                        | Descripción principal                                |
+|-----------------------------|------------------------------------------------------|
+| `/`                         | Home, login, registro, perfil, about                 |
+| `/productos/catalogo/`      | Catálogo público de productos                        |
+| `/productos/list/`          | Listado interno de productos (staff)                 |
+| `/productos/create/`        | Crear producto (staff)                               |
+| `/productos/<id>/edit/`     | Editar producto (staff)                              |
+| `/productos/<id>/delete/`   | Eliminar producto (staff)                            |
+| `/productos/<id>/`          | Detalle público de producto                          |
+| `/clientes/list/`           | Listado de clientes (staff)                          |
+| `/clientes/create/`         | Crear cliente (staff)                                |
+| `/clientes/<id>/edit/`      | Editar cliente (staff)                               |
+| `/clientes/<id>/delete/`    | Eliminar cliente (staff)                             |
+| `/blog/posts/`              | Listado de posts de blog                             |
+| `/blog/posts/create/`       | Crear post (requiere login)                          |
+| `/blog/posts/<id>/`         | Detalle de post                                      |
+| `/blog/posts/<id>/edit/`    | Editar post (autor o staff)                          |
+| `/blog/posts/<id>/delete/`  | Eliminar post (autor o staff)                        |
+| `/admin/`                   | Panel de administración Django                       |
+| `/accounts/login/`          | Login de usuario (ruta por defecto de Django)        |
+
+> Nota:
+> Las rutas de gestión (crear, editar, eliminar) requieren permisos adecuados (staff o cliente según corresponda).
 
 ---
 ## 🛠️ Instalación detallada
@@ -123,7 +139,7 @@ python manage.py loaddata demo
 </details>
 
 <details>
-  <summary>Registro y Login</summary>
+  <summary>Registro, Login y Perfil </summary>
 
   ![Registro](docs/img/registro_usuario.png)
   ![Login](docs/img/login.png)
@@ -158,11 +174,12 @@ python manage.py loaddata demo
 - SQLite (dev) / PostgreSQL (sugerido en prod)
 - Bootstrap 5
 - Docker (opcional)
+👉 El proyecto se centra en el desarrollo de backend con Django y utiliza tecnologías web modernas para la interfaz.
 
 ---
 ## 📜 Comandos útiles
-| Acción | Comando |
-|--------|---------|
+| Acción |   Comando   |
+|--------|-------------|
 | Migrar | `python manage.py makemigrations && python manage.py migrate` |
 | Crear superusuario | `python manage.py createsuperuser` |
 | Tests | `python manage.py test` |
