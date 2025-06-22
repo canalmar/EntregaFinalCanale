@@ -36,11 +36,26 @@
     .form-label { color: #232a33; font-weight: 500; }
     .form-control, .form-select { background: #fff; border: 1px solid #b6c2d2; color: #232a33; }
     .form-control:focus, .form-select:focus { border-color: #2563eb; box-shadow: 0 0 0 0.1rem #2563eb33; }
-    .alert { background: #e9f0fa !important; color: #232a33 !important; border-left: 4px solid #2563eb !important; border-radius: 0.6rem !important; }
-    .alert-success { border-left-color: #198754 !important; }
-    .alert-danger, .alert-error { border-left-color: #dc3545 !important; background: #fff0f3 !important; color: #b02a37 !important; }
-    .alert-warning { border-left-color: #ffc107 !important; }
-    .alert-info { border-left-color: #2563eb !important; }
+
+    /* —— FLASH MESSAGES: fondo blanco y línea gris clara —— */
+    .alert {
+      background: #fff !important;
+      color: #232a33 !important;
+      border-left: 4px solid #d1d5db !important; /* gris claro */
+      border-radius: 0.6rem !important;
+      box-shadow: 0 1px 4px 0 rgba(60,60,60,0.04);
+    }
+    .alert-success,
+    .alert-danger,
+    .alert-error,
+    .alert-warning,
+    .alert-info {
+      background: #fff !important;
+      color: #232a33 !important;
+      border-left: 4px solid #d1d5db !important;
+    }
+    /* Íconos mantienen color según tipo de mensaje */
+
     .btn-action { border-radius: 0.4rem; }
     .table th, .table td { vertical-align: middle; }
 

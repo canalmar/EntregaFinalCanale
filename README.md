@@ -99,6 +99,8 @@ Cargar:
 python manage.py loaddata demo
 ```
 
+> El fixture demo.json debe estar en la carpeta `fixtures` al nivel de `manage.py` (ya está así por defecto). No es necesario usar rutas especiales ni cambiar settings.
+
 > El fixture es seguro y no rompe nada: solo agrega datos de ejemplo para pruebas y demo.
 
 ---

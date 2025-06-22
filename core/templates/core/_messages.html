@@ -11,11 +11,11 @@
             {% if message.tags == "success" %}
               <i class="bi bi-check-circle-fill me-2 text-success"></i>
             {% elif message.tags == "error" or message.tags == "danger" %}
-              <i class="bi bi-x-circle-fill me-2 text-danger"></i>
+              <i class="bi bi-x-circle-fill me-2 text-primary"></i> {# Cambiado a azul #}
             {% elif message.tags == "warning" %}
               <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
             {% else %}
-              <i class="bi bi-info-circle-fill me-2 text-primary"></i>
+              <i class="bi bi-info-circle-fill me-2 text-secondary"></i>
             {% endif %}
             <span class="small">{{ message }}</span>
           </div>

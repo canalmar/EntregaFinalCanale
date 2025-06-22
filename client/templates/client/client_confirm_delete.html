@@ -6,16 +6,18 @@
 <div class="container mt-5" style="max-width: 500px;">
   <div class="card border-0 shadow-sm bg-white">
     <div class="card-body">
-      <h4 class="card-title mb-3 text-danger fw-bold">
-        ¿Estás segura de eliminar este cliente?
+      <h4 class="card-title mb-3 fw-bold text-dark" style="font-size:1.35rem;">
+        ¿Estás seguro de eliminar este cliente?
       </h4>
-      <p class="card-text text-secondary">
-        Estás por eliminar a <strong>{{ client.first_name }} {{ client.last_name }}</strong> de la base de clientes.<br>
-        <span class="fw-semibold text-danger">Esta acción no se puede deshacer.</span>
+      <p class="card-text text-secondary mb-1" style="font-size:1.05rem;">
+        Estás por eliminar a <strong class="text-dark">{{ client.first_name }} {{ client.last_name }}</strong> de la base de clientes.
+      </p>
+      <p class="card-text text-muted" style="font-size:.98rem;">
+        <span class="fw-semibold">Esta acción no se puede deshacer.</span>
       </p>
       <form method="post" class="d-flex gap-2 mt-4">
         {% csrf_token %}
-        <a href="{% url 'client:client_list' %}" class="btn btn-outline-dark">Cancelar</a>
+        <a href="{% url 'client:client_list' %}" class="btn btn-secondary">Cancelar</a>
         <button type="submit" class="btn btn-danger">Sí, eliminar</button>
       </form>
     </div>

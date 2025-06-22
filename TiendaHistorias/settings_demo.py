@@ -17,7 +17,7 @@ DATABASES["default"]["NAME"] = BASE_DIR / "db_demo.sqlite3"
 # Fixtures de demostración
 # ----------------------------------------------------------------------------------
 # Django buscará cualquier <nombre>.json dentro de BASE_DIR / "fixtures"
-FIXTURE_DIRS = [BASE_DIR / "TiendaHistorias" / "fixtures"]
+FIXTURE_DIRS = [BASE_DIR / "fixtures"]
 # ----------------------------------------------------------------------------------
 # DEBUG activo para servir static y media en desarrollo
 # ----------------------------------------------------------------------------------
