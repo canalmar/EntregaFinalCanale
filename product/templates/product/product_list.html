@@ -50,16 +50,24 @@
     Gestión de Productos
   </h2>
   <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-    <form method="get" class="d-flex" role="search" style="min-width:320px;">
-      <input
-        type="text"
-        name="search"
-        class="form-control search-input me-2"
-        placeholder="Buscar por título, autor o categoría…"
-        value="{{ search|default:'' }}"
-        aria-label="Buscar producto"
-      >
-      <button class="btn btn-primary" type="submit" data-bs-toggle="tooltip" title="Buscar">
+    <form method="get" class="d-flex align-items-center position-relative" role="search" style="min-width:420px;max-width:600px;flex-grow:1;">
+      <div class="position-relative flex-grow-1" style="min-width:320px;">
+        <input
+          type="text"
+          name="search"
+          class="form-control search-input pe-5"
+          placeholder="Buscar por título, autor o categoría…"
+          value="{{ search|default:'' }}"
+          aria-label="Buscar producto"
+          id="searchInputProduct"
+          autocomplete="off"
+          style="width:100%;"
+        >
+        <button type="button" id="clearSearchProduct" class="btn btn-light position-absolute top-50 end-0 translate-middle-y me-2 py-0 px-1" style="display:none; z-index:2;" tabindex="-1">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <button class="btn btn-primary ms-2" type="submit" data-bs-toggle="tooltip" title="Buscar">
         <i class="bi bi-search"></i>
       </button>
     </form>
@@ -69,6 +77,19 @@
       Nuevo producto
     </a>
   </div>
+  <script>
+    const inputP = document.getElementById('searchInputProduct');
+    const clearBtnP = document.getElementById('clearSearchProduct');
+    function toggleClearBtnP() {
+      clearBtnP.style.display = inputP.value ? 'block' : 'none';
+    }
+    inputP && inputP.addEventListener('input', toggleClearBtnP);
+    clearBtnP && clearBtnP.addEventListener('click', function() {
+      inputP.value = '';
+      inputP.form.submit();
+    });
+    toggleClearBtnP();
+  </script>
   {% if products %}
     <div class="card border-0 shadow-sm bg-white">
       <div class="table-responsive">

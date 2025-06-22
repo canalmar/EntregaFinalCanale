@@ -37,17 +37,38 @@
   <h2 class="fw-bold text-center mb-4">Blog: Publicaciones</h2>
 
   {# ——— Search bar ————————————————————————————————————————— #}
-  <form method="get" class="d-flex justify-content-center mb-3" role="search">
-    <input
-      type="text"
-      name="search"
-      class="form-control w-50 me-2"
-      placeholder="Buscar por título, contenido o categoría…"
-      value="{{ search|default:'' }}"
-      aria-label="Buscar publicación"
-    >
-    <button class="btn btn-outline-primary" type="submit">Buscar</button>
+  <form method="get" class="d-flex justify-content-center mb-3 align-items-center position-relative" role="search" style="max-width:700px;margin:auto;">
+    <div class="position-relative flex-grow-1" style="min-width:380px;">
+      <input
+        type="text"
+        name="search"
+        class="form-control pe-5"
+        placeholder="Buscar por título, contenido o categoría…"
+        value="{{ search|default:'' }}"
+        aria-label="Buscar publicación"
+        id="searchInputBlog"
+        autocomplete="off"
+        style="width:100%;"
+      >
+      <button type="button" id="clearSearchBlog" class="btn btn-light position-absolute top-50 end-0 translate-middle-y me-2 py-0 px-1" style="display:none; z-index:2;" tabindex="-1">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <button class="btn btn-outline-primary ms-2" type="submit">Buscar</button>
   </form>
+  <script>
+    const inputB = document.getElementById('searchInputBlog');
+    const clearBtnB = document.getElementById('clearSearchBlog');
+    function toggleClearBtnB() {
+      clearBtnB.style.display = inputB.value ? 'block' : 'none';
+    }
+    inputB && inputB.addEventListener('input', toggleClearBtnB);
+    clearBtnB && clearBtnB.addEventListener('click', function() {
+      inputB.value = '';
+      inputB.form.submit();
+    });
+    toggleClearBtnB();
+  </script>
 
   {# ——— Create-post button ——————————————————————————————— #}
   {% if user.is_authenticated %}
