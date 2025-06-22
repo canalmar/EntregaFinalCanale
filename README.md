@@ -164,6 +164,7 @@ python manage.py loaddata demo
 - SQLite (dev) / PostgreSQL (sugerido en prod)
 - Bootstrap 5
 - Docker (opcional)
+
 👉 El proyecto se centra en el desarrollo de backend con Django y utiliza tecnologías web modernas para la interfaz.
 
 ---
