@@ -110,3 +110,10 @@ class ClientDeleteView(
     template_name = "client/client_confirm_delete.html"
     success_url = reverse_lazy("client:client_list")
     success_message = MSG_DELETED
+
+    # Overrides -----------------------------------------------
+    def delete(self, request, *args, **kwargs):
+        from django.contrib import messages
+        response = super().delete(request, *args, **kwargs)
+        messages.success(self.request, MSG_DELETED)
+        return response

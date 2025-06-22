@@ -2,18 +2,23 @@
 
 Tienda de Historias es un portal literario desarrollado con Django 5.2 para la entrega final del curso Python / Django de Coderhouse.
 
-Los visitantes pueden explorar un catálogo de libros, buscar por título, autor o categoría y sumarse a la comunidad lectora a través del blog.
+Los visitantes pueden explorar un catálogo de libros, buscar por título, autor o categoría y sumarse a la comunidad lectora a través del blog, que requiere login para publicar.
 
-El staff (usuarios con is_staff=True) gestiona productos y clientes desde la interfaz interna.
+El staff (usuarios con is_staff=True) gestiona productos, clientes y blog desde la interfaz interna.
 
 Por simplicidad académica no se incluyen carrito de compras ni pagos en línea; el foco está en la administración de contenidos y usuarios. 
+
+---
+## 🎬 Video demo
+Subido a YouTube 👉 `[pendiente de agregar](#)` (máx. 10 minutos).
 
 ---
 ## 🚀 Demo rápida
 
 ```bash
 # 1️⃣ Crear y activar entorno virtual
-python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m venv .venv && .venv\Scripts\activate  # Windows
+# o: source .venv/bin/activate  # Linux/Mac
 
 # 2️⃣ Instalar dependencias
 pip install -r requirements.txt
@@ -25,15 +30,11 @@ python manage.py migrate
 python manage.py createsuperuser
 
 # 5️⃣ (Opcional) Cargar datos de ejemplo
-python manage.py loaddata demo  # categorías, productos, posts
+python manage.py loaddata demo  # categorías, productos, posts, clientes
 
 # 6️⃣ Levantar el servidor
 python manage.py runserver  # abre http://127.0.0.1:8000/
-|
-
----
-## 🎬 Video demo
-Subido a YouTube 👉 `[pendiente de agregar](#)` (máx. 10 minutos).
+```
 
 ---
 ## 🗂️ Apps y estructura
@@ -72,7 +73,7 @@ Subido a YouTube 👉 `[pendiente de agregar](#)` (máx. 10 minutos).
    ```
 5. **Cargar datos de prueba**:
    ```bash
-   python manage.py loaddata demo        # usa fixtures/demo.json
+   python manage.py loaddata demo        # usa TiendaHistorias/fixtures/demo.json
    ```
 6. **Levantar** el servidor:
    ```bash
@@ -88,15 +89,17 @@ Subido a YouTube 👉 `[pendiente de agregar](#)` (máx. 10 minutos).
 ---
 ## 📂 Demo data (`fixtures/demo.json`)
 Incluye:
-- 5 categorías
-- 6 productos con imágenes
-- 3 posts de blog
-- Usuarios: admin, staff y cliente (ver tabla superior)
+- 3 categorías
+- 3 productos
+- 2 posts de blog
+- 2 usuarios cliente (alicia, pedro)
 
 Cargar:
 ```bash
 python manage.py loaddata demo
 ```
+
+> El fixture es seguro y no rompe nada: solo agrega datos de ejemplo para pruebas y demo.
 
 ---
 ## 🖼️ Capturas de pantalla
@@ -139,6 +142,6 @@ python manage.py loaddata demo
 
 ---
 ## 👩‍💻 Autor
-**Marisa Canale**   
+**Marisa Canale**
 
 

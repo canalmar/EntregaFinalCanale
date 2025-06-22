@@ -19,6 +19,31 @@
     .btn-custom   { padding:.5rem 1.5rem; border-radius:.4rem; font-weight:500; }
     .btn-dark:hover { background-color:#333; border-color:#333; }
 
+    /* Estilos globales minimalistas y alineados */
+    body { background: #f7f9fb; color: #232a33; }
+    .card, .table, .form-control, .form-select { border-radius: 0.6rem !important; }
+    .table thead { background: #e9f0fa !important; color: #232a33; }
+    .table tbody tr { background: #fff; }
+    .table-hover tbody tr:hover { background: #f0f4fa; }
+    .btn-dark, .btn-outline-dark { background: #232a33; border-color: #232a33; color: #fff; }
+    .btn-dark:hover, .btn-outline-dark:hover { background: #0d223a; border-color: #0d223a; color: #fff; }
+    .btn-primary { background: #2563eb; border-color: #2563eb; }
+    .btn-primary:hover { background: #1741a6; border-color: #1741a6; }
+    .btn-new { background: #e9f0fa; color: #2563eb; border: 1px solid #2563eb; }
+    .btn-new:hover { background: #2563eb; color: #fff; }
+    .btn-delete, .btn-danger { color: #fff !important; background: #dc3545 !important; border-color: #dc3545 !important; }
+    .btn-delete:hover, .btn-danger:hover { background: #b02a37 !important; border-color: #b02a37 !important; }
+    .form-label { color: #232a33; font-weight: 500; }
+    .form-control, .form-select { background: #fff; border: 1px solid #b6c2d2; color: #232a33; }
+    .form-control:focus, .form-select:focus { border-color: #2563eb; box-shadow: 0 0 0 0.1rem #2563eb33; }
+    .alert { background: #e9f0fa !important; color: #232a33 !important; border-left: 4px solid #2563eb !important; border-radius: 0.6rem !important; }
+    .alert-success { border-left-color: #198754 !important; }
+    .alert-danger, .alert-error { border-left-color: #dc3545 !important; background: #fff0f3 !important; color: #b02a37 !important; }
+    .alert-warning { border-left-color: #ffc107 !important; }
+    .alert-info { border-left-color: #2563eb !important; }
+    .btn-action { border-radius: 0.4rem; }
+    .table th, .table td { vertical-align: middle; }
+
     /* Mantener navbar expandida ≥992 px */
     @media (min-width: 992px) {
       .navbar .navbar-collapse { display:flex !important; }
@@ -53,8 +78,8 @@
           </li>
 
           {% if user.is_authenticated and user.is_staff %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'product:product_list' %}">Gestión productos</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'client:client_list' %}">Gestión clientes</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'product:product_list' %}">Gestión Productos</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'client:client_list' %}">Gestión Clientes</a></li>
           {% endif %}
 
           <li class="nav-item"><a class="nav-link" href="{% url 'core:about' %}">Acerca de</a></li>

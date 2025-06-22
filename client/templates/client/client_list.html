@@ -31,17 +31,29 @@
     background: rgba(var(--bs-dark-rgb), .05);
     border-color: rgba(var(--bs-dark-rgb), .15);
   }
+
+  .btn-new {
+    background: rgba(var(--bs-purple-rgb), .12);
+    color: var(--bs-purple);
+    border: 1px solid rgba(var(--bs-purple-rgb), .35);
+    transition: background-color .15s ease;
+  }
+  .btn-new:hover,
+  .btn-new:focus {
+    background: rgba(var(--bs-purple-rgb), .22);
+    color: #fff;
+    border-color: rgba(var(--bs-purple-rgb), .55);
+  }
 </style>
 
 <div class="container-lg mt-4">
-  <h2 class="mb-4 fw-bold">
+  <h2 class="fw-bold mb-0" style="color:#232a33;">
     <i class="bi bi-people-fill me-2 text-primary"></i>
     Gestión de Clientes
   </h2>
-
-  {# Search bar (centrada y más compacta) ----------------------- #}
-  <form method="get" class="d-flex justify-content-center mb-4" role="search">
-    <div class="input-group" style="max-width: 420px;">
+  <div style="height: 1.5rem;"></div>
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <form method="get" class="d-flex" role="search" style="min-width:320px;">
       <input
         type="text"
         name="search"
@@ -53,16 +65,17 @@
       <button class="btn btn-primary" type="submit" data-bs-toggle="tooltip" title="Buscar">
         <i class="bi bi-search"></i>
       </button>
-    </div>
-  </form>
-
-
+    </form>
+    <a href="{% url 'client:client_create' %}" class="btn btn-new d-flex align-items-center gap-1 ms-auto">
+      <i class="bi bi-person-plus-fill me-2"></i> Nuevo Cliente
+    </a>
+  </div>
   {% if clients %}
-    <div class="card border-0 shadow-lg">
+    <div class="card border-0 shadow-sm bg-white">
       <div class="table-responsive">
-        <table class="table table-sm table-hover align-middle mb-0">
-          <thead class="table-primary text-dark">
-            <tr>
+        <table class="table table-hover align-middle mb-0" style="min-width:900px;">
+          <thead>
+            <tr style="background:#d0e7fa !important; color:#232a33; height:48px;">
               <th scope="col">Apellido</th>
               <th scope="col">Nombre</th>
               <th scope="col">Email</th>
@@ -71,7 +84,7 @@
               <th scope="col" class="text-center">Acciones</th>
             </tr>
           </thead>
-          <tbody class="table-group-divider">
+          <tbody>
             {% for client in clients %}
               <tr>
                 <td>{{ client.last_name }}</td>
@@ -104,7 +117,7 @@
       </div>
     </div>
   {% else %}
-    <p class="text-center fst-italic">No hay clientes cargados.</p>
+    <p class="text-center fst-italic text-secondary">No hay clientes cargados.</p>
   {% endif %}
 </div>
 {% endblock %}
