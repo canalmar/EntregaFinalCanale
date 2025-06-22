@@ -11,7 +11,6 @@ Convenciones
 
 from typing import Any
 
-from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -32,9 +31,6 @@ class StaffRequiredMixin(UserPassesTestMixin):
             template_name = "product/product_list.html"
     """
 
-    # Mensaje reutilizable
-    MSG_NO_PERMISSION: str = "No tienes permiso para acceder a esta vista."
-
     # ----------------------------------------------------------
     # Métodos de UserPassesTestMixin
     # ----------------------------------------------------------
@@ -46,9 +42,6 @@ class StaffRequiredMixin(UserPassesTestMixin):
         """
         Maneja la redirección cuando el usuario no cumple la condición.
 
-        - Muestra un mensaje de error con `django.contrib.messages`.
-        - Redirige a la ruta “home” (ajusta `reverse_lazy` si cambia).
+        - Redirige a la ruta “home” sin mostrar mensaje.
         """
-        messages.error(self.request, self.MSG_NO_PERMISSION)
         return HttpResponseRedirect(reverse_lazy("core:home"))
-

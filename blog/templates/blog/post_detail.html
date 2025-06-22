@@ -33,5 +33,14 @@
       </div>
     </div>
   </div>
+
+  {# Botón volver a la lista de publicaciones #}
+  <div class="mt-4">
+    <a href="{% url 'blog:post_list' %}"
+       class="btn btn-outline-secondary d-flex align-items-center gap-1">
+      <i class="bi bi-arrow-left"></i>
+      Volver al blog
+    </a>
+  </div>
 </div>
 {% endblock %}

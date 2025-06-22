@@ -3,13 +3,17 @@
 {% block title %}Confirmar eliminación{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="card border-secondary">
+<div class="container mt-5" style="max-width: 600px;">
+  <div class="card border-danger shadow-sm">
     <div class="card-body">
-      <h4 class="card-title text-dark">¿Estás segura de eliminar este producto?</h4>
-      <p class="card-text">Estás por eliminar <strong>{{ product.title }}</strong> del catálogo.</p>
+      <h4 class="card-title text-danger mb-3">
+        ¿Estás segura de eliminar este producto?
+      </h4>
+      <p class="card-text">
+        Estás por eliminar <strong>{{ product.title }}</strong> del catálogo. Esta acción no se puede deshacer.
+      </p>
 
-      <form method="post">
+      <form method="post" class="d-flex gap-2 mt-4">
         {% csrf_token %}
         <a href="{% url 'product:product_list' %}" class="btn btn-secondary">Cancelar</a>
         <button type="submit" class="btn btn-danger">Sí, eliminar</button>

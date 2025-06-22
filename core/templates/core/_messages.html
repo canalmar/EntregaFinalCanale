@@ -1,0 +1,47 @@
+{# core/_messages.html — Flash message con X centrada verticalmente #}
+{% if messages %}
+  <div class="d-flex justify-content-center mt-2 mb-3">
+    <div class="w-100" style="max-width: 540px;">
+      {% for message in messages %}
+        <div
+          class="alert alert-dismissible fade show shadow-sm px-3 py-2 d-flex justify-content-between align-items-center"
+          role="alert"
+          style="
+            background-color: #f8f9fa;
+            border-left: 4px solid
+              {% if message.tags == 'success' %}#198754{% elif message.tags == 'warning' %}#ffc107
+              {% elif message.tags == 'error' or message.tags == 'danger' %}#dc3545
+              {% else %}#0d6efd{% endif %};
+            color:
+              {% if message.tags == 'success' %}#198754{% elif message.tags == 'warning' %}#856404
+              {% elif message.tags == 'error' or message.tags == 'danger' %}#842029
+              {% else %}#084298{% endif %};
+            border-radius: 0.5rem;
+          "
+        >
+          <div class="d-flex align-items-center">
+            {% if message.tags == "success" %}
+              <i class="bi bi-check-circle-fill me-2"></i>
+            {% elif message.tags == "error" or message.tags == "danger" %}
+              <i class="bi bi-x-circle-fill me-2"></i>
+            {% elif message.tags == "warning" %}
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {% else %}
+              <i class="bi bi-info-circle-fill me-2"></i>
+            {% endif %}
+            <span class="small">{{ message }}</span>
+          </div>
+
+          <div class="d-flex align-items-center">
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

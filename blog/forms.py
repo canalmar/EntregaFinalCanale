@@ -3,7 +3,6 @@ blog/forms.py
 ─────────────
 Formularios para la creación y edición de publicaciones en la app Blog.
 """
-
 from django import forms
 
 from .models import Post
@@ -32,12 +31,10 @@ class PostForm(forms.ModelForm):
             "category": "Categoría",
         }
         widgets = {
-            "title": forms.TextInput(attrs={"class": "form-control"}),
-            "author": forms.TextInput(attrs={"class": "form-control"}),
-            "content": forms.Textarea(
-                attrs={"class": "form-control", "rows": 6}
-            ),
-            "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "title":    forms.TextInput(attrs={"class": "form-control"}),
+            "author":   forms.TextInput(attrs={"class": "form-control"}),
+            "content":  forms.Textarea(attrs={"class": "form-control", "rows": 6}),
+            "image":    forms.ClearableFileInput(attrs={"class": "form-control"}),
             "category": forms.Select(attrs={"class": "form-select"}),
         }
 
@@ -50,7 +47,7 @@ class PostForm(forms.ModelForm):
         - Elimina espacios extra al inicio/fin.
         - Convierte duplicados de espacios internos a uno solo.
         """
-        title = self.cleaned_data["title"].strip()
+        title: str = self.cleaned_data["title"].strip()
         return " ".join(title.split())
 
     def clean_author(self) -> str:
@@ -59,17 +56,30 @@ class PostForm(forms.ModelForm):
         (Se ejecuta solo si el campo viene desde el formulario; las vistas
         protegidas lo sobreescribirán con el usuario autenticado).
         """
-        author = self.cleaned_data.get("author", "").strip()
+        author: str = self.cleaned_data.get("author", "").strip()
         return " ".join(author.title().split())
 
     def clean_image(self):
         """
-        Acepta únicamente imágenes JPEG o PNG.
-        Si no se envía imagen, devuelve None (válido).
+        Valida la imagen solo si el usuario sube una nueva.
+
+        • Permite dejar la imagen existente (cuando se edita un post sin cambiar la foto).
+        • Acepta JPG, PNG y WEBP de hasta 2 MB.
         """
         image = self.cleaned_data.get("image")
-        if image and image.content_type not in ("image/jpeg", "image/png"):
+
+        # 1) Sin archivo nuevo → mantener la imagen actual
+        if not image or hasattr(image, "url"):  # ImageFieldFile ya guardado
+            return image
+
+        # 2) Validación de tipo MIME y tamaño
+        valid_types = {"image/jpeg", "image/png", "image/webp"}
+        if image.content_type not in valid_types:
             raise forms.ValidationError(
-                "Solo se permiten imágenes JPEG o PNG."
+                "Formato de imagen no permitido. Solo JPG, PNG o WEBP."
             )
+
+        if image.size > 2 * 1024 * 1024:  # 2 MB
+            raise forms.ValidationError("La imagen no puede superar los 2 MB.")
+
         return image

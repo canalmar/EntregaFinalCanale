@@ -1,7 +1,7 @@
 """
 product/views.py
 ────────────────
-Class-Based Views (CBV) para la app Product.
+Class-Based Views (CBV) para la app **Product**.
 
 Secciones
 ─────────
@@ -11,14 +11,18 @@ Secciones
 
 Convenciones
 ────────────
-- Identificadores en inglés; docstrings y mensajes al usuario en español.
+- Identificadores en inglés; docstrings y textos de interfaz en español.
 - Se reutiliza `StaffRequiredMixin` para restringir acceso interno.
 - Todos los listados incluyen búsqueda por título, autor o categoría.
 """
 
 from typing import Any, Dict
 
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q, QuerySet
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -27,12 +31,10 @@ from django.views.generic import (
     DeleteView,
     DetailView,
 )
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
 
 from .models import Product
 from .forms import ProductForm
-from core.view_mixins import StaffRequiredMixin  # Mixin de permisos
+from core.view_mixins import StaffRequiredMixin
 
 # ─────────────────────────────────────────
 # Mensajes reutilizables
@@ -42,7 +44,7 @@ MSG_UPDATED = "Producto actualizado correctamente."
 MSG_DELETED = "Producto eliminado correctamente."
 
 # ------------------------------------------------------------------
-# Helpers (funciones internas)
+# Helpers
 # ------------------------------------------------------------------
 def _filter_products(qs: "QuerySet[Product]", query: str) -> "QuerySet[Product]":
     """Aplica filtro por título, autor o categoría (case-insensitive)."""
@@ -54,29 +56,24 @@ def _filter_products(qs: "QuerySet[Product]", query: str) -> "QuerySet[Product]"
         )
     return qs
 
+
 # ─────────────────────────────────────────
-# CRUD interno (is_staff)
+# 1. CRUD interno (solo staff)
 # ─────────────────────────────────────────
 class ProductListView(LoginRequiredMixin, StaffRequiredMixin, ListView):
-    """
-    Lista interna de productos (solo staff), con búsqueda opcional.
-
-    URL:
-        /product/list/?search=<cadena>
-    """
+    """Listado interno con buscador (solo staff)."""
 
     model = Product
     template_name = "product/product_list.html"
     context_object_name = "products"
     ordering = ["title"]
 
-    # Overrides -----------------------------------------------
-    def get_queryset(self) -> "QuerySet[Product]":
-        query: str = self.request.GET.get("search", "").strip()
-        qs: QuerySet[Product] = super().get_queryset()
-        return _filter_products(qs, query)
+    def get_queryset(self) -> "QuerySet[Product]":  # type: ignore[override]
+        query = self.request.GET.get("search", "").strip()
+        base_qs = super().get_queryset().select_related("category")
+        return _filter_products(base_qs, query)
 
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:  # type: ignore[override]
         ctx = super().get_context_data(**kwargs)
         ctx["search"] = self.request.GET.get("search", "").strip()
         return ctx
@@ -88,7 +85,7 @@ class ProductCreateView(
     SuccessMessageMixin,
     CreateView,
 ):
-    """Crea un nuevo producto (solo staff)."""
+    """Crear producto (solo staff)."""
 
     model = Product
     form_class = ProductForm
@@ -103,7 +100,7 @@ class ProductUpdateView(
     SuccessMessageMixin,
     UpdateView,
 ):
-    """Actualiza un producto (solo staff)."""
+    """Editar producto (solo staff)."""
 
     model = Product
     form_class = ProductForm
@@ -115,54 +112,51 @@ class ProductUpdateView(
 class ProductDeleteView(
     LoginRequiredMixin,
     StaffRequiredMixin,
-    SuccessMessageMixin,
     DeleteView,
 ):
-    """Elimina un producto (solo staff)."""
+    """Eliminar producto (solo staff)."""
 
     model = Product
     template_name = "product/product_confirm_delete.html"
     success_url = reverse_lazy("product:product_list")
-    success_message = MSG_DELETED
+    success_message = MSG_DELETED  # mantener coherencia con el resto
+
+    # SuccessMessageMixin no funciona con DeleteView → mensaje manual
+    def delete(
+        self, request, *args: Any, **kwargs: Any
+    ) -> HttpResponseRedirect:  # type: ignore[override]
+        response = super().delete(request, *args, **kwargs)
+        messages.success(request, self.success_message)
+        return response
 
 
 # ─────────────────────────────────────────
-# Catálogo público (sin login)
+# 2. Catálogo público
 # ─────────────────────────────────────────
 class CatalogListView(ListView):
-    """
-    Catálogo público de productos con buscador.
-
-    URL:
-        /product/catalogo/?search=<cadena>
-    """
+    """Catálogo público con buscador."""
 
     model = Product
     template_name = "product/product_catalog.html"
     context_object_name = "products"
     ordering = ["title"]
 
-    # Overrides -----------------------------------------------
-    def get_queryset(self) -> "QuerySet[Product]":
-        query: str = self.request.GET.get("search", "").strip()
-        qs: QuerySet[Product] = super().get_queryset()
-        return _filter_products(qs, query)
+    def get_queryset(self) -> "QuerySet[Product]":  # type: ignore[override]
+        query = self.request.GET.get("search", "").strip()
+        base_qs = super().get_queryset().select_related("category")
+        return _filter_products(base_qs, query)
 
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:  # type: ignore[override]
         ctx = super().get_context_data(**kwargs)
         ctx["search"] = self.request.GET.get("search", "").strip()
         return ctx
 
 
+# ─────────────────────────────────────────
+# 3. Detalle público
+# ─────────────────────────────────────────
 class ProductDetailView(DetailView):
-    """
-    Detalle público de un producto.
-
-    Características:
-        • No requiere autenticación.
-        • Si el usuario es staff, la plantilla puede mostrar botones de
-          edición/eliminación (según lógica en el template).
-    """
+    """Detalle público de producto."""
 
     model = Product
     template_name = "product/product_detail.html"

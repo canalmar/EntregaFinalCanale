@@ -4,21 +4,57 @@
 {% block title %}{{ product.title }}{% endblock %}
 
 {% block content %}
-<div class="container my-4" style="max-width:800px;">
+{% url 'product:product_list' as fallback_url %}
+
+<style>
+  /* Action buttons - minimalista */
+  .btn-edit {
+    color: #0d6efd; /* azul Bootstrap */
+    background: #f0f4ff;
+    border: 1px solid #cfe2ff;
+  }
+  .btn-edit:hover,
+  .btn-edit:focus {
+    background: #e0ebff;
+    border-color: #9ec5fe;
+  }
+
+  .btn-delete {
+    color: #6c757d; /* gris */
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+  }
+  .btn-delete:hover,
+  .btn-delete:focus {
+    background: #e2e6ea;
+    border-color: #ced4da;
+  }
+
+  .btn-back {
+    color: #343a40; /* gris oscuro */
+    background: #f1f3f5;
+    border: 1px solid #ced4da;
+  }
+  .btn-back:hover,
+  .btn-back:focus {
+    background: #e2e6ea;
+    border-color: #adb5bd;
+  }
+</style>
+
+<div class="container-lg my-4" style="max-width: 880px;">
   <h2 class="mb-3">{{ product.title }}</h2>
 
   <div class="row g-4">
-    <!-- Columna de imagen -->
     <div class="col-12 col-md-4">
       {% if product.image %}
         <img src="{{ product.image.url }}"
              alt="{{ product.title }}"
              class="img-fluid rounded shadow-sm"
-             style="width:100%; height:240px; object-fit:contain; background:#ffffff;">
+             style="width: 100%; height: 240px; object-fit: contain; background: #fff;">
       {% endif %}
     </div>
 
-    <!-- Columna de detalles -->
     <div class="col-12 col-md-8">
       <ul class="list-group mb-3">
         <li class="list-group-item"><strong>Autor:</strong> {{ product.author }}</li>
@@ -30,23 +66,33 @@
         {% endif %}
       </ul>
 
-      <div style="text-align:justify;">
+      <div class="mb-3" style="text-align: justify;">
         {{ product.description|linebreaks }}
       </div>
 
       {% if user.is_staff %}
-        <div class="mt-3">
-          <a href="{% url 'product:product_edit' product.pk %}" class="btn btn-warning me-2">
-            <i class="bi bi-pencil-square"></i> Editar
+        <div class="d-flex gap-2">
+          <a href="{% url 'product:product_edit' product.pk %}"
+             class="btn btn-edit d-flex align-items-center gap-1">
+            <i class="bi bi-pencil"></i>
+            Editar
           </a>
-          <a href="{% url 'product:product_delete' product.pk %}" class="btn btn-danger">
-            <i class="bi bi-trash"></i> Eliminar
+          <a href="{% url 'product:product_delete' product.pk %}"
+             class="btn btn-delete d-flex align-items-center gap-1">
+            <i class="bi bi-trash"></i>
+            Eliminar
           </a>
         </div>
       {% endif %}
     </div>
   </div>
+
+  <div class="mt-4">
+    <a href="{{ request.META.HTTP_REFERER|default:fallback_url }}"
+       class="btn btn-back d-inline-flex align-items-center gap-1">
+      <i class="bi bi-arrow-left"></i>
+      Volver
+    </a>
+  </div>
 </div>
 {% endblock %}
-
-

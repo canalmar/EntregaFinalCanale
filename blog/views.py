@@ -30,7 +30,7 @@ from .models import Post
 # ──────────────────────────────────────────────────────────────
 # Mensajes reutilizables
 # ──────────────────────────────────────────────────────────────
-MSG_NO_PERMISSION = "No tienes permiso para realizar esta acción."
+
 MSG_CREATED = "Publicación creada correctamente."
 MSG_UPDATED = "Publicación actualizada correctamente."
 MSG_DELETED = "Publicación eliminada correctamente."

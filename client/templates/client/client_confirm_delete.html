@@ -1,21 +1,23 @@
-{% extends "core\base.html" %}
+{% extends "core/base.html" %}
 
-{% block title %}Eliminar Cliente{% endblock %}
+{% block title %}Confirmar eliminación{% endblock %}
 
 {% block content %}
-<div class="container mt-5" style="max-width:600px;">
-  <div class="card shadow-sm">
+<div class="container mt-5" style="max-width: 600px;">
+  <div class="card border-danger shadow-sm">
     <div class="card-body">
-      <h4 class="card-title mb-3 text-center">Eliminar Cliente</h4>
-      <p class="text-center">
-        ¿Estás seguro de que deseas eliminar
-        <strong>{{ client.first_name }} {{ client.last_name }}</strong>?
+      <h4 class="card-title text-danger mb-3">
+        ¿Estás segura de eliminar este cliente?
+      </h4>
+      <p class="card-text">
+        Estás por eliminar a <strong>{{ client.first_name }} {{ client.last_name }}</strong> de la base de clientes.
+        Esta acción no se puede deshacer.
       </p>
 
-      <form method="post" class="d-flex justify-content-between">
+      <form method="post" class="d-flex gap-2 mt-4">
         {% csrf_token %}
-        <a href="{% url 'client:client_list' %}" class="btn btn-outline-secondary">Cancelar</a>
-        <button type="submit" class="btn btn-dark">Eliminar</button>
+        <a href="{% url 'client:client_list' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
       </form>
     </div>
   </div>
