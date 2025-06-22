@@ -40,6 +40,32 @@
     color: #232a33 !important;
     border-color: #adb5bd !important;
   }
+
+  .btn-action {
+    padding: .25rem .7rem;
+    font-size: .9rem;
+    border-radius: .25rem;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color .15s ease, border-color .15s ease;
+  }
+  .btn-edit {
+    color: var(--bs-primary);
+    border-color: rgba(var(--bs-primary-rgb), .4);
+    background: transparent;
+  }
+  .btn-delete {
+    color: var(--bs-danger);
+    border-color: rgba(var(--bs-danger-rgb), .4);
+    background: transparent;
+  }
+  .btn-action:hover,
+  .btn-action:focus {
+    background: rgba(var(--bs-dark-rgb), .05);
+    border-color: rgba(var(--bs-dark-rgb), .15);
+  }
 </style>
 
 <div class="container py-4">
@@ -134,22 +160,22 @@
                 {% if user.is_staff %}
                   <div class="d-inline-flex gap-1 mt-auto">
                     <a href="{% url 'blog:post_edit' post.pk %}"
-                       class="btn-circle btn-edit" title="Editar">
+                       class="btn-action btn-edit" title="Editar">
                       <i class="bi bi-pencil"></i>
                     </a>
                     <a href="{% url 'blog:post_delete' post.pk %}"
-                       class="btn-circle btn-delete" title="Eliminar">
+                       class="btn-action btn-delete" title="Eliminar">
                       <i class="bi bi-trash"></i>
                     </a>
                   </div>
                 {% elif post.author == user.get_full_name or post.author == user.username %}
                   <div class="d-inline-flex gap-1 mt-auto">
                     <a href="{% url 'blog:post_edit' post.pk %}"
-                       class="btn-circle btn-edit" title="Editar">
+                       class="btn-action btn-edit" title="Editar">
                       <i class="bi bi-pencil"></i>
                     </a>
                     <a href="{% url 'blog:post_delete' post.pk %}"
-                       class="btn-circle btn-delete" title="Eliminar">
+                       class="btn-action btn-delete" title="Eliminar">
                       <i class="bi bi-trash"></i>
                     </a>
                   </div>

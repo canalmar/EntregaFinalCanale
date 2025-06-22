@@ -40,8 +40,8 @@
 
     <!-- Columna del contenido -->
     <div class="col-12 col-md-8">
-      <div style="text-align:justify;">
-        {{ post.content|safe }}
+      <div class="text-start p-3 bg-white rounded shadow-sm" style="line-height:1.7; font-size:1.08rem; color:#495057;">
+        {{ post.content|linebreaks }}
       </div>
     </div>
   </div>

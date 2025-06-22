@@ -10,7 +10,7 @@ Por simplicidad académica no se incluyen carrito de compras ni pagos en línea;
 
 ---
 ## 🎬 Video demo
-Subido a YouTube 👉 `[pendiente de agregar](#)` (máx. 10 minutos).
+Subido a YouTube 👉 https://youtu.be/31paymYwBn0
 
 ---
 ## 🚀 Demo rápida
@@ -38,23 +38,37 @@ python manage.py runserver  # abre http://127.0.0.1:8000/
 
 ---
 ## 🗂️ Apps y estructura
-| App | Propósito | Modelos principales |
-|-----|-----------|--------------------|
-| **core** | Home, About, autenticación, perfiles | `Profile` |
-| **client** | Gestión de clientes (staff) | `Client` |
-| **product** | Catálogo y CRUD de productos | `Category`, `Product` |
-| **blog** | Publicación de posts | `Category`, `Post` |
+
+|    App      |                 Propósito                   | Modelos principales  |
+|-------------|---------------------------------------------|----------------------|
+| **core**    | Home, About, autenticación, perfiles        | `Profile`            |
+| **client**  | Gestión de clientes (CRUD staff y auto)     | `Client`             |
+| **product** | Catálogo y Gestión de productos (CRUD staff)| `Category`, `Product`|
+| **blog**    | Publicación de posts                        | `Category`, `Post`   |
+
+> Nota: Los modelos `Category` de `product` y `blog` son independientes.
 
 ---
 ## 🔑 Funcionalidades
-- **Registro extendido** con e-mail, teléfono y dirección.
-- **Login / Logout** usando formularios Bootstrap.
-- **CRUD completo para staff** (productos, clientes, posts).
-- **Catálogo público** con buscador y vista de detalle.
-- **Blog** con categorías y búsqueda.
-- **Perfil de usuario** editable (datos personales y contacto).
-- **Internacionalización** (es-AR).
-- **Subida de imágenes** (productos y posts).
+- **Registro extendido** con e-mail, teléfono y dirección, sincronizando con modelo Cliente
+- **Login / Logout** 
+- **CRUD completo para staff** (productos, clientes, posts)
+- **Catálogo público** con buscador y vista de detalle
+- **Blog** con categorías y búsqueda (requiere login para publicar; edición/eliminación solo por autor o staff)
+- **Perfil de usuario** editable (datos personales y contacto)
+- **Internacionalización** (es-AR)
+- **Subida de imágenes** (productos y posts)
+
+---
+## 🛤️ Rutas principales
+| Ruta                  | Descripción                                 |
+|-----------------------|---------------------------------------------|
+| `/`                   | Home, login, registro, perfil, about        |
+| `/productos/`         | Catálogo público y gestión de productos     |
+| `/clientes/`          | Gestión de clientes (staff)                 |
+| `/blog/`              | Listado, detalle y gestión de posts         |
+| `/admin/`             | Panel de administración Django              |
+| `/accounts/`          | URLs de autenticación por defecto           |
 
 ---
 ## 🛠️ Instalación detallada
@@ -73,7 +87,7 @@ python manage.py runserver  # abre http://127.0.0.1:8000/
    ```
 5. **Cargar datos de prueba**:
    ```bash
-   python manage.py loaddata demo        # usa TiendaHistorias/fixtures/demo.json
+   python manage.py loaddata demo       
    ```
 6. **Levantar** el servidor:
    ```bash
@@ -81,6 +95,7 @@ python manage.py runserver  # abre http://127.0.0.1:8000/
    ```
 
 ### Variables opcionales (.env)
+> En desarrollo no es obligatorio. Para producción, se recomienda usar variables de entorno.
 | Variable | Descripción | Ejemplo |
 |----------|-------------|---------|
 | `DJANGO_SECRET_KEY` | Clave secreta en producción | `changeme` |
@@ -89,7 +104,7 @@ python manage.py runserver  # abre http://127.0.0.1:8000/
 ---
 ## 📂 Demo data (`fixtures/demo.json`)
 Incluye:
-- 3 categorías
+- 3 categorías de producto
 - 3 productos
 - 2 posts de blog
 - 2 usuarios cliente (alicia, pedro)
@@ -99,29 +114,46 @@ Cargar:
 python manage.py loaddata demo
 ```
 
-> El fixture demo.json debe estar en la carpeta `fixtures` al nivel de `manage.py` (ya está así por defecto). No es necesario usar rutas especiales ni cambiar settings.
-
-> El fixture es seguro y no rompe nada: solo agrega datos de ejemplo para pruebas y demo.
-
 ---
 ## 🖼️ Capturas de pantalla
 <details>
-  <summary>Home + Catálogo</summary>
+  <summary>Home</summary>
 
   ![Home](docs/img/home.png)
-  ![Catálogo](docs/img/catalogo.png)
 </details>
 
 <details>
-  <summary>Panel Staff</summary>
+  <summary>Registro y Login</summary>
 
-  ![Productos](docs/img/staff_productos.png)
-  ![Clientes](docs/img/staff_clientes.png)
+  ![Registro](docs/img/registro_usuario.png)
+  ![Login](docs/img/login.png)
+  ![Perfil](docs/img/perfil_usuario.png)
+</details>
+
+<details>
+  <summary>Catálogo y productos</summary>
+
+  ![Catálogo](docs/img/catalogo.png)
+  ![Detalle producto](docs/img/detalle_producto.png)
+  ![Gestión de productos](docs/img/gestion_productos.png)
+</details>
+
+<details>
+  <summary>Blog</summary>
+
+  ![Blog listado](docs/img/blog_listado.png)
+  ![Blog detalle](docs/img/blog_detalle.png)
+</details>
+
+<details>
+  <summary>Gestión de clientes</summary>
+
+  ![Gestión de clientes](docs/img/gestion_clientes.png)
 </details>
 
 ---
 ## 🏗️ Stack técnico
-- **Python 3.12**
+- **Python 3.13**
 - **Django 5.2.x**
 - SQLite (dev) / PostgreSQL (sugerido en prod)
 - Bootstrap 5
