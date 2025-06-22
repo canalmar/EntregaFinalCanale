@@ -62,29 +62,19 @@ python manage.py runserver  # abre http://127.0.0.1:8000/
 ---
 ## 🛤️ Rutas principales
 
-| Ruta                        | Descripción principal                                |
-|-----------------------------|------------------------------------------------------|
-| `/`                         | Home, login, registro, perfil, about                 |
-| `/productos/catalogo/`      | Catálogo público de productos                        |
-| `/productos/list/`          | Listado interno de productos (staff)                 |
-| `/productos/create/`        | Crear producto (staff)                               |
-| `/productos/<id>/edit/`     | Editar producto (staff)                              |
-| `/productos/<id>/delete/`   | Eliminar producto (staff)                            |
-| `/productos/<id>/`          | Detalle público de producto                          |
-| `/clientes/list/`           | Listado de clientes (staff)                          |
-| `/clientes/create/`         | Crear cliente (staff)                                |
-| `/clientes/<id>/edit/`      | Editar cliente (staff)                               |
-| `/clientes/<id>/delete/`    | Eliminar cliente (staff)                             |
-| `/blog/posts/`              | Listado de posts de blog                             |
-| `/blog/posts/create/`       | Crear post (requiere login)                          |
-| `/blog/posts/<id>/`         | Detalle de post                                      |
-| `/blog/posts/<id>/edit/`    | Editar post (autor o staff)                          |
-| `/blog/posts/<id>/delete/`  | Eliminar post (autor o staff)                        |
-| `/admin/`                   | Panel de administración Django                       |
-| `/accounts/login/`          | Login de usuario (ruta por defecto de Django)        |
+Esta tabla resume las rutas principales para navegación y administración. Algunas están sujetas a permisos de usuario o roles específicos.
 
-> Nota:
-> Las rutas de gestión (crear, editar, eliminar) requieren permisos adecuados (staff o cliente según corresponda).
+| Ruta base           | Descripción principal                        |
+|---------------------|----------------------------------------------|
+| `/`                 | Home, login, registro, perfil, about         |
+| `/productos/`       | Catálogo, gestión y detalle de productos     |
+| `/clientes/`        | Gestión de clientes (solo staff)             |
+| `/blog/`            | Publicación y gestión de posts               |
+| `/admin/`           | Panel de administración Django               |
+| `/accounts/`        | Login/logout                                 |
+| `/register/`        | Registro de usuario y cliente                |
+| `/perfil/`          | Modificar perfil de usuario                  |
+
 
 ---
 ## 🛠️ Instalación detallada
