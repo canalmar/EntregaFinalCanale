@@ -59,11 +59,22 @@
       <ul class="list-group mb-3">
         <li class="list-group-item"><strong>Autor:</strong> {{ product.author }}</li>
         <li class="list-group-item"><strong>Precio:</strong> ${{ product.price }}</li>
+        <li class="list-group-item"><strong>Categoría:</strong> {{ product.category|default:'Sin categoría' }}</li>
         {% if product.publish_date %}
           <li class="list-group-item">
             <strong>Publicado:</strong> {{ product.publish_date|date:"d M Y" }}
           </li>
         {% endif %}
+        <li class="list-group-item">
+          <strong>Stock:</strong>
+          {% if product.stock > 5 %}
+            <span class="text-success">Disponible</span>
+          {% elif product.stock > 0 %}
+            <span class="text-warning">Últimas unidades</span>
+          {% else %}
+            <span class="text-danger">Sin stock</span>
+          {% endif %}
+        </li>
       </ul>
 
       <div class="mb-3" style="text-align: justify;">

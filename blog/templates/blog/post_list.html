@@ -29,12 +29,34 @@
   }
   .btn-create:hover,
   .btn-create:focus { background: rgba(var(--bs-purple-rgb), .20); color: var(--bs-purple); }
+
+  .btn-login-publish {
+    background: #a259e6;
+    color: #fff;
+    border: none;
+  }
+  .btn-login-publish:hover, .btn-login-publish:focus {
+    background: #f8f9fa !important;
+    color: #232a33 !important;
+    border-color: #adb5bd !important;
+  }
 </style>
 
 <div class="container py-4">
 
   {# ——— Title ——————————————————————————————————————————————— #}
-  <h2 class="fw-bold text-center mb-4">Blog: Publicaciones</h2>
+  <div class="position-relative mb-4" style="max-width:700px;margin:auto;">
+    <h2 class="fw-bold text-center mb-0">Blog: Publicaciones</h2>
+  </div>
+  {% if not user.is_authenticated %}
+    <div style="position:fixed; top:70px; right:24px; z-index:1050;">
+      <a href="{% url 'login' %}"
+         class="btn btn-login-publish btn-sm fw-semibold shadow"
+         style="background:#fff; color:#495057; border:1.5px solid #dee2e6; font-size:0.97rem; padding:.32rem 1rem;">
+        <i class="bi bi-person-circle me-1"></i> Inicia sesión para publicar
+      </a>
+    </div>
+  {% endif %}
 
   {# ——— Search bar ————————————————————————————————————————— #}
   <form method="get" class="d-flex justify-content-center mb-3 align-items-center position-relative" role="search" style="max-width:700px;margin:auto;">
@@ -70,7 +92,7 @@
     toggleClearBtnB();
   </script>
 
-  {# ——— Create-post button ——————————————————————————————— #}
+  {# ——— Create-post button o invitación a loguearse ——— #}
   {% if user.is_authenticated %}
     <div class="d-flex justify-content-end mb-4">
       <a href="{% url 'blog:post_create' %}"
